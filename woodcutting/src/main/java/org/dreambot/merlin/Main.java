@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.dreambot.api.methods.Calculations;
 import org.dreambot.api.methods.container.impl.Inventory;
+import org.dreambot.api.methods.container.impl.equipment.Equipment;
 import org.dreambot.api.methods.interactive.GameObjects;
 import org.dreambot.api.methods.interactive.Players;
 import org.dreambot.api.methods.map.Tile;
@@ -51,8 +52,8 @@ public class Main extends AbstractScript {
 
   @Override
   public int onLoop() {
-    if (!Inventory.contains("Bronze axe")) {
-      Logger.log("No axe found, stopping script.");
+    if (!hasAxe()) {
+      Logger.log("No axe found in inventory or equipment, stopping script.");
       stop();
       return 0;
     }
@@ -77,4 +78,11 @@ public class Main extends AbstractScript {
 
     return Calculations.random(300, 1000);
   }
+
+  /** Checks if the player has any axe in their inventory or equipped. */
+  private boolean hasAxe() {
+    return Inventory.contains(item -> item != null && item.getName().toLowerCase().contains("axe"))
+        || Equipment.contains(item -> item != null && item.getName().toLowerCase().contains("axe"));
+  }
+
 }
