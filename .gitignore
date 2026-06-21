@@ -17,3 +17,6 @@ dependency-reduced-pom.xml
 
 # Logs
 *.log
+
+# DreamBot launcher
+Launcher.jar
