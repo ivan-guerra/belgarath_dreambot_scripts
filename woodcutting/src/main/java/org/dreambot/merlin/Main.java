@@ -26,6 +26,7 @@ public class Main extends AbstractScript {
 
   @Override
   public void onStart() {
+    // TODO: Make it to here the user can select the tree type.
     List<GameObject> trees = GameObjects.all(go -> go != null && "Tree".equals(go.getName()));
     trees.sort((a, b) -> Double.compare(a.distance(), b.distance()));
 
@@ -56,9 +57,12 @@ public class Main extends AbstractScript {
       Logger.log("No axe found in inventory or equipment, stopping script.");
       return -1;
     }
+    // TODO: Call equipAxe() method here to equip an axe from the inventory if not
+    // already equipped
 
     if (Inventory.isFull()) {
       Logger.log("Inventory full, dropping logs...");
+      // TODO: Make this a generic drop of any kind of logs
       Utility.DropVerticalOrdering("Logs");
     }
 
