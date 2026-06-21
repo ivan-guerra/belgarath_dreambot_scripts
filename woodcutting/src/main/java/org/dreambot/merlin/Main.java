@@ -54,8 +54,7 @@ public class Main extends AbstractScript {
   public int onLoop() {
     if (!hasAxe()) {
       Logger.log("No axe found in inventory or equipment, stopping script.");
-      stop();
-      return 0;
+      return -1;
     }
 
     if (Inventory.isFull()) {
