@@ -54,6 +54,27 @@ public class Main extends AbstractScript {
 
   @Override
   public void onStart() {
+    selectedTree = queryTreeType();
+    if (selectedTree == null) {
+      Logger.error("No tree type selected, stopping script.");
+      stop();
+      return;
+    }
+    Logger.info("Selected tree type: " + selectedTree.getName());
+
+    targetTiles = findNearestTreeTiles(selectedTree);
+    if (targetTiles.isEmpty()) {
+      Logger.error("No trees of type " + selectedTree.getName() + " found nearby, stopping script.");
+      stop();
+    }
+  }
+
+  /**
+   * Displays a dialog to the user to select a tree type for woodcutting.
+   *
+   * @return The selected Tree enum value, or null if no selection was made.
+   */
+  private Tree queryTreeType() {
     Tree[] treeTypes = Tree.values();
     Tree[] result = new Tree[1];
 
@@ -71,23 +92,8 @@ public class Main extends AbstractScript {
     } catch (Exception e) {
       Logger.error("Error showing dialog: " + e.getMessage());
       stop();
-      return;
     }
-
-    selectedTree = result[0];
-
-    if (selectedTree == null) {
-      Logger.error("No tree type selected, stopping script.");
-      stop();
-      return;
-    }
-    Logger.info("Selected tree type: " + selectedTree.getName());
-
-    targetTiles = findNearestTreeTiles(selectedTree);
-    if (targetTiles.isEmpty()) {
-      Logger.error("No trees of type " + selectedTree.getName() + " found nearby, stopping script.");
-      stop();
-    }
+    return result[0];
   }
 
   /**
