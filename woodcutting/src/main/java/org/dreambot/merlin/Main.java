@@ -67,6 +67,11 @@ public class Main extends AbstractScript {
       Logger.error("No trees of type " + selectedTree.getName() + " found nearby, stopping script.");
       stop();
     }
+
+    if (targetTiles.size() < MAX_TREES) {
+      Logger.warn("Found only " + targetTiles.size() + " trees of type " + selectedTree.getName()
+          + ". The script will continue with fewer trees.");
+    }
   }
 
   /**
