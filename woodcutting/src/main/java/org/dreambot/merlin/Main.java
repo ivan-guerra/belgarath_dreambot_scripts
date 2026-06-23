@@ -11,6 +11,8 @@ import org.dreambot.api.methods.container.impl.equipment.Equipment;
 import org.dreambot.api.methods.interactive.GameObjects;
 import org.dreambot.api.methods.interactive.Players;
 import org.dreambot.api.methods.map.Tile;
+import org.dreambot.api.methods.skills.Skill;
+import org.dreambot.api.methods.skills.Skills;
 import org.dreambot.api.script.AbstractScript;
 import org.dreambot.api.script.Category;
 import org.dreambot.api.script.ScriptManifest;
@@ -34,16 +36,23 @@ public class Main extends AbstractScript {
    * Enum representing different types of trees available for woodcutting.
    */
   private enum Tree {
-    Normal("Tree"), Oak("Oak tree"), Willow("Willow tree"), Maple("Maple tree"), Yew("Yew tree"), Magic("Magic tree");
+    Normal("Tree", 1), Oak("Oak tree", 15), Willow("Willow tree", 30), Maple("Maple tree", 45), Yew("Yew tree", 60),
+    Magic("Magic tree", 75);
 
     private final String name;
+    private final int levelRequirement;
 
-    Tree(String name) {
+    Tree(String name, int levelRequirement) {
       this.name = name;
+      this.levelRequirement = levelRequirement;
     }
 
     public String getName() {
       return name;
+    }
+
+    public int getLevelReq() {
+      return levelRequirement;
     }
 
     @Override
@@ -61,6 +70,11 @@ public class Main extends AbstractScript {
       return;
     }
     Logger.info("Selected tree type: " + selectedTree.getName());
+
+    if (!hasLevelReq(selectedTree)) {
+      Logger.error("Your woodcutting level is too low to cut " + selectedTree.getName() + "s, stopping script.");
+      stop();
+    }
 
     targetTiles = findNearestTreeTiles(selectedTree);
     if (targetTiles.isEmpty()) {
@@ -99,6 +113,18 @@ public class Main extends AbstractScript {
       stop();
     }
     return result[0];
+  }
+
+  /**
+   * Checks if the player has the required woodcutting level to cut the specified
+   * tree.
+   *
+   * @param tree The tree type to check against.
+   * @return true if the player meets or exceeds the level requirement, false
+   *         otherwise.
+   */
+  private boolean hasLevelReq(Tree tree) {
+    return Skills.getRealLevel(Skill.WOODCUTTING) >= tree.getLevelReq();
   }
 
   /**
