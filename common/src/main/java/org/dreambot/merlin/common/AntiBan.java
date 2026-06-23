@@ -37,8 +37,8 @@ public class AntiBan {
   private void goAfk(int min_min, int max_min) {
     int period_ms = Calculations.random(min_min * 60000, max_min * 60000);
 
-    Logger.log("Anti-ban: Going AFK for " + period_ms / 1000 + "sec");
+    Logger.info("Anti-ban: Going AFK for " + period_ms / 1000 + "sec");
     script.sleep(period_ms);
-    Logger.log("Anti-ban: Back from AFK");
+    Logger.info("Anti-ban: Back from AFK");
   }
 }

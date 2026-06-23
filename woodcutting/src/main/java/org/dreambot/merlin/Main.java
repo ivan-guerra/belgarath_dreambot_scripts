@@ -33,11 +33,11 @@ public class Main extends AbstractScript {
 
     for (int i = 0; i < Math.min(MAX_TREES, trees.size()); i++) {
       targetTiles.add(trees.get(i).getTile());
-      Logger.log("Targeting tree at: " + trees.get(i).getTile());
+      Logger.info("Targeting tree at: " + trees.get(i).getTile());
     }
 
     if (targetTiles.isEmpty()) {
-      Logger.log("No trees found nearby, stopping script.");
+      Logger.error("No trees found nearby, stopping script.");
       stop();
     }
   }
@@ -55,12 +55,12 @@ public class Main extends AbstractScript {
   @Override
   public int onLoop() {
     if (!equipAxe()) {
-      Logger.log("No axe found in inventory or equipped, stopping script.");
+      Logger.error("No axe found in inventory or equipped, stopping script.");
       return -1;
     }
 
     if (Inventory.isFull()) {
-      Logger.log("Inventory full, dropping logs...");
+      Logger.info("Inventory full, dropping logs...");
       Utility.DropVerticalOrdering("logs");
     }
 
@@ -68,12 +68,12 @@ public class Main extends AbstractScript {
 
     GameObject tree = getTargetTree();
     if (tree != null) {
-      Logger.log("Chopping tree at " + tree.getTile());
+      Logger.info("Chopping tree at " + tree.getTile());
       tree.interact("Chop down");
       sleepUntil(() -> !tree.exists(), () -> Players.getLocal().isAnimating(), TREE_RESPAWN_TIME_MS,
           Utility.POLL_DELAY_MS);
     } else {
-      Logger.log("All trees gone, waiting for respawn...");
+      Logger.info("All trees gone, waiting for respawn...");
       sleepUntil(() -> getTargetTree() != null, TREE_RESPAWN_TIME_MS, Utility.POLL_DELAY_MS);
     }
 
