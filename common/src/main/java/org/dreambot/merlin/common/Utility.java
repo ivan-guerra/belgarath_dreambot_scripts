@@ -14,10 +14,12 @@ public class Utility {
   public static final int POLL_DELAY_MS = 100;
 
   /**
-   * Shift click drops all items with the given name from the inventory using
-   * vertical column ordering.
+   * Drops items from the inventory in a vertical order (column-wise) based on the
+   * specified item name.
    *
-   * @param itemName the name of the item to drop from the inventory
+   * @param itemName The name of the item to drop. The method will drop all items
+   *                 that contain this
+   *                 name (case-insensitive).
    */
   public static void DropVerticalOrdering(String itemName) {
     Keyboard.pressShift();
@@ -28,7 +30,7 @@ public class Utility {
 
     for (int slot : ordered_slots) {
       Item item = Inventory.getItemInSlot(slot);
-      if (item != null && itemName.equals(item.getName())) {
+      if (item != null && item.getName().toLowerCase().contains(itemName.toLowerCase())) {
         if (item.interact()) {
           Sleep.sleepUntil(() -> Inventory.getItemInSlot(slot) == null, DROP_TIMEOUT_MS, POLL_DELAY_MS);
         }

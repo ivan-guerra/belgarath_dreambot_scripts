@@ -61,8 +61,7 @@ public class Main extends AbstractScript {
 
     if (Inventory.isFull()) {
       Logger.log("Inventory full, dropping logs...");
-      // TODO: Make this a generic drop of any kind of logs
-      Utility.DropVerticalOrdering("Logs");
+      Utility.DropVerticalOrdering("logs");
     }
 
     antiBan.run();
