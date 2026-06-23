@@ -14,6 +14,7 @@ import org.dreambot.api.script.Category;
 import org.dreambot.api.script.ScriptManifest;
 import org.dreambot.api.utilities.Logger;
 import org.dreambot.api.wrappers.interactive.GameObject;
+import org.dreambot.api.wrappers.items.Item;
 import org.dreambot.merlin.common.AntiBan;
 import org.dreambot.merlin.common.Utility;
 
@@ -53,12 +54,10 @@ public class Main extends AbstractScript {
 
   @Override
   public int onLoop() {
-    if (!hasAxe()) {
-      Logger.log("No axe found in inventory or equipment, stopping script.");
+    if (!equipAxe()) {
+      Logger.log("No axe found in inventory or equipped, stopping script.");
       return -1;
     }
-    // TODO: Call equipAxe() method here to equip an axe from the inventory if not
-    // already equipped
 
     if (Inventory.isFull()) {
       Logger.log("Inventory full, dropping logs...");
@@ -82,10 +81,26 @@ public class Main extends AbstractScript {
     return Calculations.random(300, 1000);
   }
 
-  /** Checks if the player has any axe in their inventory or equipped. */
-  private boolean hasAxe() {
-    return Inventory.contains(item -> item != null && item.getName().toLowerCase().contains("axe"))
-        || Equipment.contains(item -> item != null && item.getName().toLowerCase().contains("axe"));
+  /**
+   * Equips an axe from the inventory if not already equipped.
+   *
+   * @return true if an axe is equipped or was successfully equipped, false
+   *         otherwise
+   */
+  private boolean equipAxe() {
+    String axeSubStr = "axe";
+    String interactOption = "Wield";
+
+    boolean axeEquipped = Equipment.contains(item -> item != null && item.getName().toLowerCase().contains(axeSubStr));
+    if (axeEquipped) {
+      return true;
+    }
+
+    Item axe = Inventory.get(item -> item != null && item.getName().toLowerCase().contains(axeSubStr));
+    if (axe != null) {
+      return Inventory.interact(axe, interactOption);
+    }
+    return false;
   }
 
 }
