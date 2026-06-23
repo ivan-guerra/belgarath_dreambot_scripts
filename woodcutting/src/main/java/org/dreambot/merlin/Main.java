@@ -22,8 +22,9 @@ import org.dreambot.merlin.common.Utility;
 
 @ScriptManifest(name = "Tree Woodcutting", author = "Merlin", description = "Woodcutting just trees.", category = Category.WOODCUTTING, version = 0.1)
 public class Main extends AbstractScript {
+  private static final int MAX_TREES = 2;
+
   private final int TREE_RESPAWN_TIME_MS = Calculations.random(30000, 45000);
-  private final int MAX_TREES = 4;
   private final AntiBan antiBan = new AntiBan(this);
 
   private Tree selectedTree;
