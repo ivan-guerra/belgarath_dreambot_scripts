@@ -144,21 +144,6 @@ public class Main extends AbstractScript {
     return tiles;
   }
 
-  /**
-   * Gets the closest tree of the selected type from the target tiles.
-   *
-   * @return The closest GameObject representing the tree, or null if none found.
-   */
-  private GameObject getTargetTree() {
-    for (Tile tile : targetTiles) {
-      GameObject tree = GameObjects.closest(
-          obj -> obj != null && selectedTree.getName().equals(obj.getName()) && obj.getTile().equals(tile));
-      if (tree != null)
-        return tree;
-    }
-    return null;
-  }
-
   @Override
   public int onLoop() {
     if (!equipAxe()) {
@@ -207,5 +192,20 @@ public class Main extends AbstractScript {
       return Inventory.interact(axe, interactOption);
     }
     return false;
+  }
+
+  /**
+   * Gets the closest tree of the selected type from the target tiles.
+   *
+   * @return The closest GameObject representing the tree, or null if none found.
+   */
+  private GameObject getTargetTree() {
+    for (Tile tile : targetTiles) {
+      GameObject tree = GameObjects.closest(
+          obj -> obj != null && selectedTree.getName().equals(obj.getName()) && obj.getTile().equals(tile));
+      if (tree != null)
+        return tree;
+    }
+    return null;
   }
 }
