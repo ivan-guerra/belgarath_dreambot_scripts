@@ -171,7 +171,8 @@ public class Main extends AbstractScript {
       return true;
     }
 
-    boolean openedInventory = Sleep.sleepUntil(() -> Tabs.open(Tab.INVENTORY), WIELD_AXE_TIMEOUT_MS);
+    Tabs.open(Tab.INVENTORY);
+    boolean openedInventory = Sleep.sleepUntil(() -> Tabs.getOpen() == Tab.INVENTORY, WIELD_AXE_TIMEOUT_MS);
     if (!openedInventory) {
       Logger.error("Failed to open inventory tab.");
       return false;
