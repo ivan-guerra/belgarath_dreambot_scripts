@@ -1,8 +1,5 @@
 package org.dreambot.merlin;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.swing.JOptionPane;
 
 import org.dreambot.api.methods.Calculations;
@@ -10,7 +7,6 @@ import org.dreambot.api.methods.container.impl.Inventory;
 import org.dreambot.api.methods.container.impl.equipment.Equipment;
 import org.dreambot.api.methods.interactive.GameObjects;
 import org.dreambot.api.methods.interactive.Players;
-import org.dreambot.api.methods.map.Tile;
 import org.dreambot.api.methods.skills.Skill;
 import org.dreambot.api.methods.skills.Skills;
 import org.dreambot.api.methods.tabs.Tab;
@@ -27,28 +23,29 @@ import org.dreambot.merlin.common.Utility;
 
 @ScriptManifest(name = "Tree Woodcutting", author = "Merlin", description = "Woodcutting just trees.", category = Category.WOODCUTTING, version = 0.1)
 public class Main extends AbstractScript {
-  private static final int MAX_TREES = 2;
-
+  private static final int MAX_TREE_DIST = 7;
   private final int WIELD_AXE_TIMEOUT_MS = 3000;
-  private final int TREE_RESPAWN_TIME_MS = Calculations.random(30000, 45000);
   private final AntiBan antiBan = new AntiBan(this);
 
   private Tree selectedTree;
-  private List<Tile> targetTiles = new ArrayList<>();
 
   /**
    * Enum representing different types of trees available for woodcutting.
    */
   private enum Tree {
-    Normal("Tree", 1), Oak("Oak tree", 15), Willow("Willow tree", 30), Maple("Maple tree", 45), Yew("Yew tree", 60),
-    Magic("Magic tree", 75), Ironwood("Ironwood tree", 80), Redwood("Redwood tree", 90), Rosewood("Rosewood tree", 92);
+    Normal("Tree", 1, 49), Oak("Oak tree", 15, 9), Willow("Willow tree", 30, 9), Maple("Maple tree", 45, 36),
+    Yew("Yew tree", 60, 60),
+    Magic("Magic tree", 75, 120), Ironwood("Ironwood tree", 80, 120), Redwood("Redwood tree", 90, 120),
+    Rosewood("Rosewood tree", 92, 123);
 
     private final String name;
     private final int levelRequirement;
+    private final long respawnTimeSec;
 
-    Tree(String name, int levelRequirement) {
+    Tree(String name, int levelRequirement, long respawnTimeSec) {
       this.name = name;
       this.levelRequirement = levelRequirement;
+      this.respawnTimeSec = respawnTimeSec;
     }
 
     public String getName() {
@@ -57,6 +54,10 @@ public class Main extends AbstractScript {
 
     public int getLevelReq() {
       return levelRequirement;
+    }
+
+    public long getRespawnTimeMSec() {
+      return respawnTimeSec * 1000;
     }
 
     @Override
@@ -78,17 +79,6 @@ public class Main extends AbstractScript {
     if (!hasLevelReq(selectedTree)) {
       Logger.error("Your woodcutting level is too low to cut " + selectedTree.getName() + "s, stopping script.");
       stop();
-    }
-
-    targetTiles = findNearestTreeTiles(selectedTree);
-    if (targetTiles.isEmpty()) {
-      Logger.error("No trees of type " + selectedTree.getName() + " found nearby, stopping script.");
-      stop();
-    }
-
-    if (targetTiles.size() < MAX_TREES) {
-      Logger.warn("Found only " + targetTiles.size() + " trees of type " + selectedTree.getName()
-          + ". The script will continue with fewer trees.");
     }
   }
 
@@ -131,23 +121,6 @@ public class Main extends AbstractScript {
     return Skills.getRealLevel(Skill.WOODCUTTING) >= tree.getLevelReq();
   }
 
-  /**
-   * Finds the nearest tree tiles of the specified type.
-   *
-   * @param treeType The type of tree to find.
-   * @return A list of tiles where the nearest trees are located.
-   */
-  private List<Tile> findNearestTreeTiles(Tree treeType) {
-    List<GameObject> trees = GameObjects.all(obj -> obj != null && treeType.getName().equals(obj.getName()));
-    trees.sort((a, b) -> Double.compare(a.distance(), b.distance()));
-
-    List<Tile> tiles = new ArrayList<>();
-    for (int i = 0; i < Math.min(MAX_TREES, trees.size()); i++) {
-      tiles.add(trees.get(i).getTile());
-    }
-    return tiles;
-  }
-
   @Override
   public int onLoop() {
     if (!equipAxe()) {
@@ -162,15 +135,22 @@ public class Main extends AbstractScript {
 
     antiBan.run();
 
-    GameObject tree = getTargetTree();
+    GameObject tree = findNearestTree();
     if (tree != null) {
       Logger.info("Chopping tree at " + tree.getTile());
       tree.interact("Chop down");
-      sleepUntil(() -> !tree.exists(), () -> Players.getLocal().isAnimating(), TREE_RESPAWN_TIME_MS,
+      sleepUntil(() -> !tree.exists(), () -> Players.getLocal().isAnimating(), selectedTree.getRespawnTimeMSec(),
           Utility.POLL_DELAY_MS);
     } else {
-      Logger.info("All trees gone, waiting for respawn...");
-      sleepUntil(() -> getTargetTree() != null, TREE_RESPAWN_TIME_MS, Utility.POLL_DELAY_MS);
+      Logger.info("No " + selectedTree.getName() + "s found nearby, waiting for respawn...");
+      Sleep.sleep(selectedTree.getRespawnTimeMSec());
+
+      GameObject respawnedTree = findNearestTree();
+      if (respawnedTree == null) {
+        Logger.error("No " + selectedTree.getName() + "s found after waiting " + selectedTree.getRespawnTimeMSec()
+            + "ms, stopping script.");
+        return -1;
+      }
     }
 
     return Calculations.random(300, 1000);
@@ -207,17 +187,14 @@ public class Main extends AbstractScript {
   }
 
   /**
-   * Gets the closest tree of the selected type from the target tiles.
+   * Finds the nearest tree of the selected type within the maximum distance
+   * defined by MAX_TREE_DIST.
    *
-   * @return The closest GameObject representing the tree, or null if none found.
+   * @return The nearest GameObject representing the tree, or null if none found.
    */
-  private GameObject getTargetTree() {
-    for (Tile tile : targetTiles) {
-      GameObject tree = GameObjects.closest(
-          obj -> obj != null && selectedTree.getName().equals(obj.getName()) && obj.getTile().equals(tile));
-      if (tree != null)
-        return tree;
-    }
-    return null;
+  private GameObject findNearestTree() {
+    return GameObjects
+        .closest(t -> t != null && selectedTree.getName().equals(t.getName()) && t.distance() <= MAX_TREE_DIST);
   }
+
 }
