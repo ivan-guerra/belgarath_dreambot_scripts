@@ -37,7 +37,7 @@ public class Main extends AbstractScript {
    */
   private enum Tree {
     Normal("Tree", 1), Oak("Oak tree", 15), Willow("Willow tree", 30), Maple("Maple tree", 45), Yew("Yew tree", 60),
-    Magic("Magic tree", 75);
+    Magic("Magic tree", 75), Ironwood("Ironwood tree", 80), Redwood("Redwood tree", 90), Rosewood("Rosewood tree", 92);
 
     private final String name;
     private final int levelRequirement;
@@ -189,6 +189,7 @@ public class Main extends AbstractScript {
 
     Item axe = Inventory.get(item -> item != null && item.getName().toLowerCase().contains(axeSubStr));
     if (axe != null) {
+      // TODO: Need to check if the axe was actually equipped, maybe a sleepuntil here
       return Inventory.interact(axe, interactOption);
     }
     return false;
