@@ -72,7 +72,6 @@ public class Main extends AbstractScript {
     if (selectedTree == null) {
       Logger.error("No tree type selected, stopping script.");
       stop();
-      return;
     }
     Logger.info("Selected tree type: " + selectedTree.getName());
 
@@ -125,7 +124,7 @@ public class Main extends AbstractScript {
   public int onLoop() {
     if (!equipAxe()) {
       Logger.error("No axe found in inventory or equipped, stopping script.");
-      return -1;
+      stop();
     }
 
     if (Inventory.isFull()) {
@@ -150,7 +149,7 @@ public class Main extends AbstractScript {
       if (respawnedTree == null) {
         Logger.error("No " + selectedTree.getName() + "s found after waiting " + selectedTree.getRespawnTimeMSec()
             + "ms, stopping script.");
-        return -1;
+        stop();
       }
     }
 
