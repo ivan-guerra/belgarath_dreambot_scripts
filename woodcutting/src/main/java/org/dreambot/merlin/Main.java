@@ -139,7 +139,8 @@ public class Main extends AbstractScript {
     if (tree != null) {
       Logger.info("Chopping tree at " + tree.getTile());
       tree.interact("Chop down");
-      sleepUntil(() -> !tree.exists(), () -> Players.getLocal().isAnimating(), selectedTree.getRespawnTimeMSec(),
+      sleepUntil(() -> !tree.exists() || Inventory.isFull(), () -> Players.getLocal().isAnimating(),
+          selectedTree.getRespawnTimeMSec(),
           Utility.POLL_DELAY_MS);
     } else {
       Logger.info("No " + selectedTree.getName() + "s found nearby, waiting for respawn...");
