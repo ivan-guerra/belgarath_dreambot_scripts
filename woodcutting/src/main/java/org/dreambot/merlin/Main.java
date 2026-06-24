@@ -142,7 +142,8 @@ public class Main extends AbstractScript {
           selectedTree.getRespawnTimeMSec(),
           Utility.POLL_DELAY_MS);
     } else {
-      Logger.info("No " + selectedTree.getName() + "s found nearby, waiting for respawn...");
+      Logger
+          .info("No " + selectedTree.getName() + "s found within " + MAX_TREE_DIST + " tiles, waiting for respawn...");
       boolean respawnedTree = Sleep.sleepUntil(() -> findNearestTree() != null, selectedTree.getRespawnTimeMSec(),
           1000);
       if (!respawnedTree) {
