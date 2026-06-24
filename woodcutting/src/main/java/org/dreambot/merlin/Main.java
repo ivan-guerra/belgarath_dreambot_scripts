@@ -13,10 +13,13 @@ import org.dreambot.api.methods.interactive.Players;
 import org.dreambot.api.methods.map.Tile;
 import org.dreambot.api.methods.skills.Skill;
 import org.dreambot.api.methods.skills.Skills;
+import org.dreambot.api.methods.tabs.Tab;
+import org.dreambot.api.methods.tabs.Tabs;
 import org.dreambot.api.script.AbstractScript;
 import org.dreambot.api.script.Category;
 import org.dreambot.api.script.ScriptManifest;
 import org.dreambot.api.utilities.Logger;
+import org.dreambot.api.utilities.Sleep;
 import org.dreambot.api.wrappers.interactive.GameObject;
 import org.dreambot.api.wrappers.items.Item;
 import org.dreambot.merlin.common.AntiBan;
@@ -26,6 +29,7 @@ import org.dreambot.merlin.common.Utility;
 public class Main extends AbstractScript {
   private static final int MAX_TREES = 2;
 
+  private final int WIELD_AXE_TIMEOUT_MS = 3000;
   private final int TREE_RESPAWN_TIME_MS = Calculations.random(30000, 45000);
   private final AntiBan antiBan = new AntiBan(this);
 
@@ -187,10 +191,17 @@ public class Main extends AbstractScript {
       return true;
     }
 
+    boolean openedInventory = Sleep.sleepUntil(() -> Tabs.open(Tab.INVENTORY), WIELD_AXE_TIMEOUT_MS);
+    if (!openedInventory) {
+      Logger.error("Failed to open inventory tab.");
+      return false;
+    }
+
     Item axe = Inventory.get(item -> item != null && item.getName().toLowerCase().contains(axeSubStr));
-    if (axe != null) {
-      // TODO: Need to check if the axe was actually equipped, maybe a sleepuntil here
-      return Inventory.interact(axe, interactOption);
+    if (axe != null && axe.interact(interactOption)) {
+      return Sleep.sleepUntil(
+          () -> Equipment.contains(item -> item != null && item.getName().toLowerCase().contains(axeSubStr)),
+          WIELD_AXE_TIMEOUT_MS);
     }
     return false;
   }
