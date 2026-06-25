@@ -21,7 +21,6 @@ import org.dreambot.api.wrappers.items.Item;
 import org.dreambot.merlin.common.AntiBan;
 import org.dreambot.merlin.common.Utility;
 
-// TODO: Handle login and breaks. Probably a utility thing.
 // TODO: Add option to hop worlds if another player is present, this is more a utility thing.
 
 @ScriptManifest(name = "Merlin's Woodcutting", author = "Merlin", description = "A leveling focused woodcutting script.", category = Category.WOODCUTTING, version = 0.1)
