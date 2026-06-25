@@ -21,11 +21,10 @@ import org.dreambot.api.wrappers.items.Item;
 import org.dreambot.merlin.common.AntiBan;
 import org.dreambot.merlin.common.Utility;
 
-// TODO: Update script ScriptManifest
 // TODO: Handle login and breaks. Probably a utility thing.
 // TODO: Add option to hop worlds if another player is present, this is more a utility thing.
 
-@ScriptManifest(name = "Tree Woodcutting", author = "Merlin", description = "Woodcutting just trees.", category = Category.WOODCUTTING, version = 0.1)
+@ScriptManifest(name = "Merlin's Woodcutting", author = "Merlin", description = "A leveling focused woodcutting script.", category = Category.WOODCUTTING, version = 0.1)
 public class Main extends AbstractScript {
   private static final int MAX_TREE_DIST = 7;
   private final int WIELD_AXE_TIMEOUT_MS = 3000;
