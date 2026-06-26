@@ -11,6 +11,7 @@ import org.dreambot.api.methods.skills.Skill;
 import org.dreambot.api.methods.skills.Skills;
 import org.dreambot.api.methods.tabs.Tab;
 import org.dreambot.api.methods.tabs.Tabs;
+import org.dreambot.api.methods.world.Worlds;
 import org.dreambot.api.script.AbstractScript;
 import org.dreambot.api.script.Category;
 import org.dreambot.api.script.ScriptManifest;
@@ -20,8 +21,6 @@ import org.dreambot.api.wrappers.interactive.GameObject;
 import org.dreambot.api.wrappers.items.Item;
 import org.dreambot.merlin.common.AntiBan;
 import org.dreambot.merlin.common.Utility;
-
-// TODO: Add option to hop worlds if another player is present, this is more a utility thing.
 
 @ScriptManifest(name = "Merlin's Woodcutting", author = "Merlin", description = "A leveling focused woodcutting script.", category = Category.WOODCUTTING, version = 0.1)
 public class Main extends AbstractScript {
@@ -138,9 +137,19 @@ public class Main extends AbstractScript {
 
     GameObject tree = findNearestTree();
     if (tree != null) {
+      if (Utility.isSomeoneElseUsingNode(tree)) {
+        if (Utility.hopWorld()) {
+          Logger.info("Hopped to world " + Worlds.getCurrent() + " to avoid competition for the tree.");
+          return 600;
+        } else {
+          Logger.error("Failed to hop worlds, stopping script.");
+          stop();
+        }
+      }
+
       Logger.info("Chopping tree at " + tree.getTile());
       tree.interact("Chop down");
-      sleepUntil(() -> !tree.exists() || Inventory.isFull(), () -> Players.getLocal().isAnimating(),
+      Sleep.sleepUntil(() -> !tree.exists() || Inventory.isFull(), () -> Players.getLocal().isAnimating(),
           selectedTree.getRespawnTimeMSec(),
           Utility.POLL_DELAY_MS);
     } else {
