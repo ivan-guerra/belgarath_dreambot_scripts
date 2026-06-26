@@ -1,5 +1,7 @@
 package org.dreambot.merlin;
 
+import java.awt.Graphics2D;
+
 import javax.swing.JOptionPane;
 
 import org.dreambot.api.methods.Calculations;
@@ -65,6 +67,11 @@ public class Main extends AbstractScript {
     public String toString() {
       return name;
     }
+  }
+
+  @Override
+  public void onPaint(Graphics2D g) {
+    antiBan.onPaint(g);
   }
 
   @Override
