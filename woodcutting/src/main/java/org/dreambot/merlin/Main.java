@@ -24,6 +24,13 @@ import org.dreambot.api.wrappers.items.Item;
 import org.dreambot.merlin.common.AntiBan;
 import org.dreambot.merlin.common.Utility;
 
+/**
+ * Main class for the woodcutting script. This script is purely meant for
+ * leveling woodcutting not money making through wooductting! The script allows
+ * the user to select a tree type on startup and will then cut that tree type
+ * until the inventory is full, at which point it will drop the logs and
+ * continue cutting.
+ */
 @ScriptManifest(name = "Merlin's Woodcutting", author = "Merlin", description = "A leveling focused woodcutting script.", category = Category.WOODCUTTING, version = 0.1)
 public class Main extends AbstractScript {
   private static final int MAX_TREE_DIST = 7;
@@ -67,6 +74,10 @@ public class Main extends AbstractScript {
     public String toString() {
       return name;
     }
+  }
+
+  /** Constructs a new instance of the Merlin Woodcutting script. */
+  public Main() {
   }
 
   @Override

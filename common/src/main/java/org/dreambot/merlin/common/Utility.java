@@ -24,6 +24,11 @@ public class Utility {
   /** Maximum time in milliseconds to wait for a world hop to complete. */
   public static final int WORLD_HOP_TIMEOUT_MS = 5000;
 
+  /** Private constructor to prevent instantiation of the Utility class. */
+  public Utility() {
+    // Private constructor to prevent instantiation
+  }
+
   /**
    * Drops items from the inventory in a vertical order (column-wise) based on the
    * specified item name.

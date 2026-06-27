@@ -15,7 +15,9 @@ public class AntiBan {
   private volatile long afkEndTime = 0;
 
   /**
-   * @param script the running script used to invoke sleep
+   * Constructs an AntiBan instance with the provided script.
+   *
+   * @param script the script instance to associate with this AntiBan
    */
   public AntiBan(AbstractScript script) {
     this.script = script;
