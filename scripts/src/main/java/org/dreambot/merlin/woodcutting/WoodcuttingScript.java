@@ -6,6 +6,7 @@ import javax.swing.JOptionPane;
 
 import org.dreambot.api.methods.Calculations;
 import org.dreambot.api.methods.container.impl.Inventory;
+import org.dreambot.api.methods.container.impl.bank.Bank;
 import org.dreambot.api.methods.container.impl.equipment.Equipment;
 import org.dreambot.api.methods.interactive.GameObjects;
 import org.dreambot.api.methods.interactive.Players;
@@ -32,9 +33,45 @@ import org.dreambot.merlin.common.Utility;
 public class WoodcuttingScript extends MerlinScript implements PaintListener {
   private static final int MAX_TREE_DIST = 7;
   private final int WIELD_AXE_TIMEOUT_MS = 3000;
+  private static final int WITHDRAW_TIMEOUT_MS = 3000;
   private final AntiBan antiBan;
 
   private Tree selectedTree;
+
+  /**
+   * Enum representing different types of axes available for woodcutting.
+   */
+  public enum Axe {
+    DRAGON("Dragon axe", 61, 60),
+    RUNE("Rune axe", 41, 40),
+    ADAMANT("Adamant axe", 30, 30),
+    MITHRIL("Mithril axe", 20, 20),
+    STEEL("Steel axe", 6, 5),
+    IRON("Iron axe", 1, 1),
+    BRONZE("Bronze axe", 1, 1);
+
+    private final String name;
+    private final int woodcutLvlReq;
+    private final int attackLvlReq;
+
+    Axe(String name, int woodcutLvlReq, int attackLvlReq) {
+      this.name = name;
+      this.woodcutLvlReq = woodcutLvlReq;
+      this.attackLvlReq = attackLvlReq;
+    }
+
+    public String getName() {
+      return name;
+    }
+
+    public int getWoodcutLvlReq() {
+      return woodcutLvlReq;
+    }
+
+    public int getAttackLvlReq() {
+      return attackLvlReq;
+    }
+  }
 
   /**
    * Enum representing different types of trees available for woodcutting.
@@ -98,7 +135,7 @@ public class WoodcuttingScript extends MerlinScript implements PaintListener {
     }
     Logger.info("Selected tree type: " + selectedTree.getName());
 
-    if (!hasLevelReq(selectedTree)) {
+    if (Skills.getRealLevel(Skill.WOODCUTTING) < selectedTree.getLevelReq()) {
       Logger.error("Your woodcutting level is too low to cut " + selectedTree.getName() + "s, stopping script.");
       stop();
       return;
@@ -132,27 +169,28 @@ public class WoodcuttingScript extends MerlinScript implements PaintListener {
     return result[0];
   }
 
-  /**
-   * Checks if the player has the required woodcutting level to cut the specified
-   * tree.
-   *
-   * @param tree The tree type to check against.
-   * @return true if the player meets or exceeds the level requirement, false
-   *         otherwise.
-   */
-  private boolean hasLevelReq(Tree tree) {
-    return Skills.getRealLevel(Skill.WOODCUTTING) >= tree.getLevelReq();
-  }
-
   @Override
   public int onLoop() {
+    Utility.closeAllInterfaces();
+
+    // Try to equip an axe from the inventory
     if (!equipAxe()) {
-      Logger.error("No axe found in inventory or equipped, stopping script.");
-      stop();
+      // If no axe is equipped, try to withdraw one from the bank and equip it
+      if (Bank.open()) {
+        if (!withdrawAxeFromBank() || !equipAxe()) {
+          Logger.error("Failed to withdraw or equip an axe, stopping script.");
+          stop();
+        }
+      } else {
+        // Player is in the process of walking to the bank
+        return 600;
+      }
     }
 
+    // Always check if the inventory is full before attempting to chop a tree
     if (Inventory.isFull()) {
       Logger.info("Inventory full, dropping logs...");
+      // Open the inventory tab before attempting to drop logs
       if (!Utility.openInventoryTab()) {
         Logger.error("Failed to open inventory tab.");
         stop();
@@ -164,6 +202,7 @@ public class WoodcuttingScript extends MerlinScript implements PaintListener {
 
     GameObject tree = findNearestTree();
     if (tree != null) {
+      // World hop if another player is using the tree to avoid competition/reports
       if (Utility.isSomeoneElseUsingNode(tree)) {
         if (Utility.hopWorld()) {
           Logger.info("Hopped to world " + Worlds.getCurrent() + " to avoid competition for the tree.");
@@ -184,6 +223,7 @@ public class WoodcuttingScript extends MerlinScript implements PaintListener {
           .info("No " + selectedTree.getName() + "s found within " + MAX_TREE_DIST + " tiles, waiting for respawn...");
       boolean respawnedTree = Sleep.sleepUntil(() -> findNearestTree() != null, selectedTree.getRespawnTimeMSec(),
           1000);
+      // Stop if no tree has respawned after the expected respawn time
       if (!respawnedTree) {
         Logger.error("No " + selectedTree.getName() + "s found after waiting " + selectedTree.getRespawnTimeMSec()
             + "ms, stopping script.");
@@ -204,22 +244,60 @@ public class WoodcuttingScript extends MerlinScript implements PaintListener {
     String axeSubStr = "axe";
     String interactOption = "Wield";
 
+    // Check if an axe is already equipped
     boolean axeEquipped = Equipment.contains(item -> item != null && item.getName().toLowerCase().contains(axeSubStr));
     if (axeEquipped) {
       return true;
     }
 
+    // Open the inventory tab to access the axe
     if (!Utility.openInventoryTab()) {
       Logger.error("Failed to open inventory tab.");
       return false;
     }
 
+    // Find an axe in the inventory and attempt to wield it
     Item axe = Inventory.get(item -> item != null && item.getName().toLowerCase().contains(axeSubStr));
     if (axe != null && axe.interact(interactOption)) {
       return Sleep.sleepUntil(
           () -> Equipment.contains(item -> item != null && item.getName().toLowerCase().contains(axeSubStr)),
           WIELD_AXE_TIMEOUT_MS);
     }
+    return false;
+  }
+
+  /**
+   * Withdraws the best axe available in the nearest bank that the player
+   * has the required woodcutting and attack levels to use.
+   *
+   * @return true if an axe was successfully withdrawn, false if no suitable
+   *         axe was found or the bank could not be opened.
+   */
+  private boolean withdrawAxeFromBank() {
+    int woodcutLevel = Skills.getRealLevel(Skill.WOODCUTTING);
+    int attackLevel = Skills.getRealLevel(Skill.ATTACK);
+
+    if (!Bank.isOpen()) {
+      Logger.error("Called withdrawAxeFromBank() but bank is not open.");
+      return false;
+    }
+
+    for (Axe axe : Axe.values()) {
+      if (woodcutLevel >= axe.getWoodcutLvlReq() && attackLevel >= axe.getAttackLvlReq()
+          && Bank.contains(axe.getName())) {
+        if (Bank.withdraw(axe.getName(), 1)) {
+          boolean withdrawn = Sleep.sleepUntil(() -> Inventory.contains(axe.getName()), WITHDRAW_TIMEOUT_MS);
+          if (!Bank.close()) {
+            Logger.error("Failed to close bank after withdrawing axe.");
+            return false;
+          }
+          return withdrawn;
+        }
+      }
+    }
+
+    Logger.error(
+        "No suitable axe found in bank for current levels (WC: " + woodcutLevel + ", ATK: " + attackLevel + ").");
     return false;
   }
 

@@ -121,4 +121,11 @@ public class Utility {
     Tabs.open(Tab.INVENTORY);
     return Sleep.sleepUntil(() -> Tabs.getOpen() == Tab.INVENTORY, OPEN_TAB_TIMEOUT_MS);
   }
+
+  /**
+   * Closes all open interfaces by pressing the Escape key.
+   */
+  public static void closeAllInterfaces() {
+    Keyboard.pressEsc();
+  }
 }
