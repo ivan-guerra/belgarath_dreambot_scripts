@@ -1,4 +1,4 @@
-package org.dreambot.merlin;
+package org.dreambot.merlin.woodcutting;
 
 import java.awt.Graphics2D;
 
@@ -13,27 +13,26 @@ import org.dreambot.api.methods.skills.Skill;
 import org.dreambot.api.methods.skills.Skills;
 import org.dreambot.api.methods.world.Worlds;
 import org.dreambot.api.script.AbstractScript;
-import org.dreambot.api.script.Category;
-import org.dreambot.api.script.ScriptManifest;
+import org.dreambot.api.script.listener.PaintListener;
 import org.dreambot.api.utilities.Logger;
 import org.dreambot.api.utilities.Sleep;
 import org.dreambot.api.wrappers.interactive.GameObject;
 import org.dreambot.api.wrappers.items.Item;
+import org.dreambot.merlin.MerlinScript;
 import org.dreambot.merlin.common.AntiBan;
 import org.dreambot.merlin.common.Utility;
 
 /**
  * Main class for the woodcutting script. This script is purely meant for
- * leveling woodcutting not money making through wooductting! The script allows
+ * leveling woodcutting not money making through woodcutting! The script allows
  * the user to select a tree type on startup and will then cut that tree type
  * until the inventory is full, at which point it will drop the logs and
  * continue cutting.
  */
-@ScriptManifest(name = "Merlin's Woodcutting", author = "Merlin", description = "A leveling focused woodcutting script.", category = Category.WOODCUTTING, version = 0.1)
-public class Main extends AbstractScript {
+public class WoodcuttingScript extends MerlinScript implements PaintListener {
   private static final int MAX_TREE_DIST = 7;
   private final int WIELD_AXE_TIMEOUT_MS = 3000;
-  private final AntiBan antiBan = new AntiBan(this);
+  private final AntiBan antiBan;
 
   private Tree selectedTree;
 
@@ -74,8 +73,10 @@ public class Main extends AbstractScript {
     }
   }
 
-  /** Constructs a new instance of the Merlin Woodcutting script. */
-  public Main() {
+  /** Constructs a new instance of the Woodcutting script. */
+  public WoodcuttingScript(AbstractScript script) {
+    super(script);
+    this.antiBan = new AntiBan(script);
   }
 
   @Override
@@ -89,12 +90,14 @@ public class Main extends AbstractScript {
     if (selectedTree == null) {
       Logger.error("No tree type selected, stopping script.");
       stop();
+      return;
     }
     Logger.info("Selected tree type: " + selectedTree.getName());
 
     if (!hasLevelReq(selectedTree)) {
       Logger.error("Your woodcutting level is too low to cut " + selectedTree.getName() + "s, stopping script.");
       stop();
+      return;
     }
   }
 
