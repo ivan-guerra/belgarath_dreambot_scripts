@@ -10,6 +10,7 @@ import org.dreambot.api.methods.tabs.Tabs;
 import org.dreambot.api.methods.world.World;
 import org.dreambot.api.methods.world.Worlds;
 import org.dreambot.api.methods.worldhopper.WorldHopper;
+import org.dreambot.api.utilities.Logger;
 import org.dreambot.api.utilities.Sleep;
 import org.dreambot.api.wrappers.interactive.GameObject;
 import org.dreambot.api.wrappers.interactive.Player;
@@ -35,18 +36,24 @@ public class Utility {
   }
 
   /**
-   * Drops items from the inventory in a vertical order (column-wise) based on the
-   * specified item name.
+   * Drops all items in the inventory that match the specified item name, using
+   * vertical ordering.
    *
-   * @param itemName The name of the item to drop. The method will drop all items
-   *                 that contain this name (case-insensitive).
+   * @param itemName The name of the item to drop (case-insensitive).
+   * @return true if the items were successfully dropped, false otherwise.
    */
-  public static void dropVerticalOrdering(String itemName) {
+  public static boolean dropVerticalOrdering(String itemName) {
     Keyboard.pressShift();
     // Drop items by columns in a 28 slot inventory (0-27), starting from the
     // top-left and going down each column
     int[] ordered_slots = { 0, 4, 8, 12, 16, 20, 24, 1, 5, 9, 13, 17, 21, 25, 2, 6, 10, 14, 18, 22, 26,
         3, 7, 11, 15, 19, 23, 27 };
+
+    // Open the inventory tab before attempting to drop items
+    if (!Utility.openInventoryTab()) {
+      Logger.error("Failed to open inventory tab.");
+      return false;
+    }
 
     for (int slot : ordered_slots) {
       Item item = Inventory.getItemInSlot(slot);
@@ -57,6 +64,8 @@ public class Utility {
       }
     }
     Keyboard.releaseShift();
+
+    return true;
   }
 
   /**

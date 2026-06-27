@@ -190,12 +190,10 @@ public class WoodcuttingScript extends MerlinScript implements PaintListener {
     // Always check if the inventory is full before attempting to chop a tree
     if (Inventory.isFull()) {
       Logger.info("Inventory full, dropping logs...");
-      // Open the inventory tab before attempting to drop logs
-      if (!Utility.openInventoryTab()) {
-        Logger.error("Failed to open inventory tab.");
+      if (!Utility.dropVerticalOrdering("logs")) {
+        Logger.error("Failed to drop logs, stopping script.");
         stop();
       }
-      Utility.dropVerticalOrdering("logs");
     }
 
     antiBan.run();
