@@ -11,8 +11,6 @@ import org.dreambot.api.methods.interactive.GameObjects;
 import org.dreambot.api.methods.interactive.Players;
 import org.dreambot.api.methods.skills.Skill;
 import org.dreambot.api.methods.skills.Skills;
-import org.dreambot.api.methods.tabs.Tab;
-import org.dreambot.api.methods.tabs.Tabs;
 import org.dreambot.api.methods.world.Worlds;
 import org.dreambot.api.script.AbstractScript;
 import org.dreambot.api.script.Category;
@@ -148,6 +146,10 @@ public class Main extends AbstractScript {
 
     if (Inventory.isFull()) {
       Logger.info("Inventory full, dropping logs...");
+      if (!Utility.openInventoryTab()) {
+        Logger.error("Failed to open inventory tab.");
+        stop();
+      }
       Utility.dropVerticalOrdering("logs");
     }
 
@@ -200,9 +202,7 @@ public class Main extends AbstractScript {
       return true;
     }
 
-    Tabs.open(Tab.INVENTORY);
-    boolean openedInventory = Sleep.sleepUntil(() -> Tabs.getOpen() == Tab.INVENTORY, WIELD_AXE_TIMEOUT_MS);
-    if (!openedInventory) {
+    if (!Utility.openInventoryTab()) {
       Logger.error("Failed to open inventory tab.");
       return false;
     }

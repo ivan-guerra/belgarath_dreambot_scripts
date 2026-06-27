@@ -5,6 +5,8 @@ import org.dreambot.api.data.GameState;
 import org.dreambot.api.input.Keyboard;
 import org.dreambot.api.methods.container.impl.Inventory;
 import org.dreambot.api.methods.interactive.Players;
+import org.dreambot.api.methods.tabs.Tab;
+import org.dreambot.api.methods.tabs.Tabs;
 import org.dreambot.api.methods.world.World;
 import org.dreambot.api.methods.world.Worlds;
 import org.dreambot.api.methods.worldhopper.WorldHopper;
@@ -23,6 +25,9 @@ public class Utility {
 
   /** Maximum time in milliseconds to wait for a world hop to complete. */
   public static final int WORLD_HOP_TIMEOUT_MS = 5000;
+
+  /** Maximum time in milliseconds to wait for a tab to open. */
+  public static final int OPEN_TAB_TIMEOUT_MS = 3000;
 
   /** Private constructor to prevent instantiation of the Utility class. */
   public Utility() {
@@ -105,5 +110,15 @@ public class Utility {
       }
     }
     return false;
+  }
+
+  /**
+   * Opens the inventory tab and waits until it is open.
+   *
+   * @return true if the inventory tab was successfully opened, false otherwise.
+   */
+  public static boolean openInventoryTab() {
+    Tabs.open(Tab.INVENTORY);
+    return Sleep.sleepUntil(() -> Tabs.getOpen() == Tab.INVENTORY, OPEN_TAB_TIMEOUT_MS);
   }
 }
