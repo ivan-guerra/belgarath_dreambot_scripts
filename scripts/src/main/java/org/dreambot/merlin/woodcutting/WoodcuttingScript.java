@@ -73,7 +73,11 @@ public class WoodcuttingScript extends MerlinScript implements PaintListener {
     }
   }
 
-  /** Constructs a new instance of the Woodcutting script. */
+  /**
+   * Constructs a new WoodcuttingScript with the given AbstractScript instance.
+   *
+   * @param script the main AbstractScript instance
+   */
   public WoodcuttingScript(AbstractScript script) {
     super(script);
     this.antiBan = new AntiBan(script);

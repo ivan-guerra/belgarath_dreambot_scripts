@@ -9,10 +9,18 @@ import org.dreambot.api.script.ScriptManifest;
 import org.dreambot.api.script.listener.PaintListener;
 import org.dreambot.merlin.woodcutting.WoodcuttingScript;
 
+/**
+ * Main entry point for Merlin's DreamBot script collection.
+ * Delegates execution to the selected {@link MerlinScript} implementation.
+ */
 @ScriptManifest(name = "Merlin's Scripts", author = "Merlin", description = "Merlin's DreamBot script collection.", category = Category.MISC, version = 0.1)
 public class MainEntryPoint extends AbstractScript {
   /** The currently selected script to run. */
   private MerlinScript selectedScript;
+
+  /** Constructs a new MainEntryPoint instance. */
+  public MainEntryPoint() {
+  }
 
   @Override
   public void onStart() {
