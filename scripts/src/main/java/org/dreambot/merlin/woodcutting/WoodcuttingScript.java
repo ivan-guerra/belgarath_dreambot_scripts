@@ -131,14 +131,13 @@ public class WoodcuttingScript extends MerlinScript implements PaintListener {
     if (selectedTree == null) {
       Logger.error("No tree type selected, stopping script.");
       stop();
-      return;
-    }
-    Logger.info("Selected tree type: " + selectedTree.getName());
+    } else {
+      Logger.info("Selected tree type: " + selectedTree.getName());
 
-    if (Skills.getRealLevel(Skill.WOODCUTTING) < selectedTree.getLevelReq()) {
-      Logger.error("Your woodcutting level is too low to cut " + selectedTree.getName() + "s, stopping script.");
-      stop();
-      return;
+      if (Skills.getRealLevel(Skill.WOODCUTTING) < selectedTree.getLevelReq()) {
+        Logger.error("Your woodcutting level is too low to cut " + selectedTree.getName() + "s, stopping script.");
+        stop();
+      }
     }
   }
 
@@ -164,7 +163,6 @@ public class WoodcuttingScript extends MerlinScript implements PaintListener {
       });
     } catch (Exception e) {
       Logger.error("Error showing dialog: " + e.getMessage());
-      stop();
     }
     return result[0];
   }
@@ -179,7 +177,7 @@ public class WoodcuttingScript extends MerlinScript implements PaintListener {
       if (Bank.open()) {
         if (!withdrawAxeFromBank() || !equipAxe()) {
           Logger.error("Failed to withdraw or equip an axe, stopping script.");
-          stop();
+          return -1;
         }
       } else {
         // Player is in the process of walking to the bank
@@ -192,7 +190,7 @@ public class WoodcuttingScript extends MerlinScript implements PaintListener {
       Logger.info("Inventory full, dropping logs...");
       if (!Utility.dropVerticalOrdering("logs")) {
         Logger.error("Failed to drop logs, stopping script.");
-        stop();
+        return -1;
       }
     }
 
@@ -207,7 +205,7 @@ public class WoodcuttingScript extends MerlinScript implements PaintListener {
           return 600;
         } else {
           Logger.error("Failed to hop worlds, stopping script.");
-          stop();
+          return -1;
         }
       }
 
@@ -225,7 +223,7 @@ public class WoodcuttingScript extends MerlinScript implements PaintListener {
       if (!respawnedTree) {
         Logger.error("No " + selectedTree.getName() + "s found after waiting " + selectedTree.getRespawnTimeMSec()
             + "ms, stopping script.");
-        stop();
+        return -1;
       }
     }
 
