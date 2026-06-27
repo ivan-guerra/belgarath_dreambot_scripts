@@ -137,7 +137,7 @@ public class Main extends AbstractScript {
 
     if (Inventory.isFull()) {
       Logger.info("Inventory full, dropping logs...");
-      Utility.DropVerticalOrdering("logs");
+      Utility.dropVerticalOrdering("logs");
     }
 
     antiBan.run();

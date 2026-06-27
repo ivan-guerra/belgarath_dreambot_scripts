@@ -29,10 +29,9 @@ public class Utility {
    * specified item name.
    *
    * @param itemName The name of the item to drop. The method will drop all items
-   *                 that contain this
-   *                 name (case-insensitive).
+   *                 that contain this name (case-insensitive).
    */
-  public static void DropVerticalOrdering(String itemName) {
+  public static void dropVerticalOrdering(String itemName) {
     Keyboard.pressShift();
     // Drop items by columns in a 28 slot inventory (0-27), starting from the
     // top-left and going down each column
@@ -53,7 +52,8 @@ public class Utility {
   /**
    * Hops to a random world based on the current world type (F2P or P2P). If the
    * current world is F2P, it will hop to a random F2P world. If the current world
-   * is P2P, it will hop to a random P2P world.
+   * is P2P, it will hop to a random P2P world. PvP worlds are excluded from the
+   * selection.
    *
    * @return true if the world hop was successful, false otherwise.
    */
@@ -73,14 +73,16 @@ public class Utility {
   }
 
   /**
-   * Checks if another player is currently using the specified game object (node).
+   * Checks if another player is currently using the specified game object.
+   * A player is considered to be using the node if they are within 1 tile of it
+   * and are currently playing an animation.
    *
-   * @param targetNode The game object to check for other players using it.
+   * @param target The game object to check for other players using it.
    * @return true if another player is using the node, false otherwise.
    */
-  public static boolean isSomeoneElseUsingNode(GameObject targetNode) {
+  public static boolean isSomeoneElseUsingNode(GameObject target) {
     // Check if the target node exists
-    if (targetNode == null) {
+    if (target == null) {
       return false;
     }
 
@@ -93,7 +95,7 @@ public class Utility {
 
       // Check if the player is within 1 tile of the target object and playing the
       // animation
-      if (p.distance(targetNode) <= 1 && p.isAnimating()) {
+      if (p.distance(target) <= 1 && p.isAnimating()) {
         return true;
       }
     }
