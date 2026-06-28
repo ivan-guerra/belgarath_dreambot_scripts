@@ -1,5 +1,7 @@
 package org.dreambot.merlin.woodcutting.nodes;
 
+import java.util.concurrent.atomic.AtomicReference;
+
 import org.dreambot.api.methods.container.impl.Inventory;
 import org.dreambot.api.methods.interactive.GameObjects;
 import org.dreambot.api.methods.interactive.Players;
@@ -14,28 +16,28 @@ import org.dreambot.merlin.woodcutting.Tree;
  * Task node for chopping a specific type of tree in the game.
  */
 public class ChopTreeTask extends TaskNode {
-  private final Tree selectedTree;
+  private final AtomicReference<Tree> selectedTree;
 
   /**
    * Constructs a new ChopTreeTask for the specified tree type.
    *
    * @param selectedTree The type of tree to chop.
    */
-  public ChopTreeTask(Tree selectedTree) {
+  public ChopTreeTask(AtomicReference<Tree> selectedTree) {
     this.selectedTree = selectedTree;
   }
 
   @Override
   public boolean accept() {
-    return !Inventory.isFull() && (GameObjects.closest(selectedTree.getName()) != null);
+    return !Inventory.isFull() && (GameObjects.closest(selectedTree.get().getName()) != null);
   }
 
   @Override
   public int execute() {
     final long chopTimeoutMs = 3000;
-    GameObject tree = GameObjects.closest(selectedTree.getName());
+    GameObject tree = GameObjects.closest(selectedTree.get().getName());
 
-    Logger.info("Chopping " + selectedTree.getName() + " at tile " + tree.getTile() + ".");
+    Logger.info("Chopping " + selectedTree.get().getName() + " at tile " + tree.getTile() + ".");
     tree.interact("Chop down");
     Sleep.sleepUntil(() -> !tree.exists() || Inventory.isFull(), () -> Players.getLocal().isAnimating(), chopTimeoutMs,
         Utility.POLL_DELAY_MS);

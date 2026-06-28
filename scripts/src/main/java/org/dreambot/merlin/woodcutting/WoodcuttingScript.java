@@ -1,6 +1,7 @@
 package org.dreambot.merlin.woodcutting;
 
 import java.awt.Graphics2D;
+import java.util.concurrent.atomic.AtomicReference;
 
 import javax.swing.JOptionPane;
 
@@ -22,7 +23,7 @@ import org.dreambot.merlin.woodcutting.nodes.WalkToTreeAreaTask;
  */
 public class WoodcuttingScript extends MerlinScript implements PaintListener {
   private final AntiBanTask antiBan;
-  private Tree selectedTree;
+  private AtomicReference<Tree> selectedTree = new AtomicReference<>(Tree.Normal);
 
   /**
    * Constructs a new WoodcuttingScript with the given AbstractScript instance.
@@ -47,10 +48,10 @@ public class WoodcuttingScript extends MerlinScript implements PaintListener {
       return;
     }
 
-    Logger.info("Selected tree type: " + selectedTree.getName());
+    Logger.info("Selected tree type: " + selectedTree.get().getName());
 
-    if (Skills.getRealLevel(Skill.WOODCUTTING) < selectedTree.getLevelReq()) {
-      Logger.error("Your woodcutting level is too low to cut " + selectedTree.getName() + "s, stopping script.");
+    if (Skills.getRealLevel(Skill.WOODCUTTING) < selectedTree.get().getLevelReq()) {
+      Logger.error("Your woodcutting level is too low to cut " + selectedTree.get().getName() + "s, stopping script.");
       return;
     }
   }
@@ -58,9 +59,9 @@ public class WoodcuttingScript extends MerlinScript implements PaintListener {
   /**
    * Displays a dialog to the user to select a tree type for woodcutting.
    *
-   * @return The selected Tree enum value, or null if no selection was made.
+   * @return an AtomicReference containing the selected Tree type, or null if no
    */
-  private Tree queryTreeType() {
+  private AtomicReference<Tree> queryTreeType() {
     Tree[] treeTypes = Tree.values();
     Tree[] result = new Tree[1];
 
@@ -78,7 +79,7 @@ public class WoodcuttingScript extends MerlinScript implements PaintListener {
     } catch (Exception e) {
       Logger.error("Error showing dialog: " + e.getMessage());
     }
-    return result[0];
+    return new AtomicReference<Tree>(result[0]);
   }
 
   @Override

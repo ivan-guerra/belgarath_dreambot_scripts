@@ -1,5 +1,7 @@
 package org.dreambot.merlin.woodcutting.nodes;
 
+import java.util.concurrent.atomic.AtomicReference;
+
 import org.dreambot.api.methods.interactive.Players;
 import org.dreambot.api.script.TaskNode;
 import org.dreambot.api.utilities.Logger;
@@ -11,28 +13,28 @@ import org.dreambot.merlin.woodcutting.Tree;
  */
 public class WalkToTreeAreaTask extends TaskNode {
   private static final int MAX_TREE_DIST = 7;
-  private final Tree selectedTree;
+  private final AtomicReference<Tree> selectedTree;
 
   /**
    * Constructs a new WalkToTreeAreaTask for the specified tree type.
    *
    * @param selectedTree The type of tree to walk to.
    */
-  public WalkToTreeAreaTask(Tree selectedTree) {
+  public WalkToTreeAreaTask(AtomicReference<Tree> selectedTree) {
     this.selectedTree = selectedTree;
   }
 
   @Override
   public boolean accept() {
-    final boolean isInTreeArea = Players.getLocal().distance(selectedTree.getLocation()) <= MAX_TREE_DIST;
+    final boolean isInTreeArea = Players.getLocal().distance(selectedTree.get().getLocation()) <= MAX_TREE_DIST;
 
     return !isInTreeArea;
   }
 
   @Override
   public int execute() {
-    Logger.info("Walking to " + selectedTree.getName() + " area.");
-    WalkingUtils.walkToTile(selectedTree.getLocation());
+    Logger.info("Walking to " + selectedTree.get().getName() + " area.");
+    WalkingUtils.walkToTile(selectedTree.get().getLocation());
     return 1000;
   }
 }
