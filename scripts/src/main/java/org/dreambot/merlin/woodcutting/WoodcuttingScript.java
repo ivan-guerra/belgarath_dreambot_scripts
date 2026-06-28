@@ -278,6 +278,11 @@ public class WoodcuttingScript extends MerlinScript implements PaintListener {
       return false;
     }
 
+    if (!Bank.depositAllItems()) {
+      Logger.error("Failed to deposit all items in bank.");
+      return false;
+    }
+
     for (Axe axe : Axe.values()) {
       if (woodcutLevel >= axe.getWoodcutLvlReq() && attackLevel >= axe.getAttackLvlReq()
           && Bank.contains(axe.getName())) {
