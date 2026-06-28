@@ -3,9 +3,9 @@ package org.dreambot.merlin;
 import java.awt.Graphics2D;
 import java.util.Optional;
 
-import org.dreambot.api.script.AbstractScript;
 import org.dreambot.api.script.Category;
 import org.dreambot.api.script.ScriptManifest;
+import org.dreambot.api.script.impl.TaskScript;
 import org.dreambot.api.script.listener.PaintListener;
 import org.dreambot.merlin.woodcutting.WoodcuttingScript;
 
@@ -14,12 +14,19 @@ import org.dreambot.merlin.woodcutting.WoodcuttingScript;
  * Delegates execution to the selected {@link MerlinScript} implementation.
  */
 @ScriptManifest(name = "Merlin's Scripts", author = "Merlin", description = "Merlin's DreamBot script collection.", category = Category.MISC, version = 0.1)
-public class MainEntryPoint extends AbstractScript {
+public class MainEntryPoint extends TaskScript {
   /** The currently selected script to run. */
   private MerlinScript selectedScript;
 
   /** Constructs a new MainEntryPoint instance. */
   public MainEntryPoint() {
+  }
+
+  @Override
+  public void onPaint(Graphics2D g) {
+    if (selectedScript instanceof PaintListener) {
+      ((PaintListener) selectedScript).onPaint(g);
+    }
   }
 
   @Override
@@ -34,20 +41,7 @@ public class MainEntryPoint extends AbstractScript {
         break;
     }
     selectedScript.onStart();
-  }
-
-  @Override
-  public void onPaint(Graphics2D g) {
-    if (selectedScript instanceof PaintListener) {
-      ((PaintListener) selectedScript).onPaint(g);
-    }
-  }
-
-  @Override
-  public int onLoop() {
-    if (selectedScript != null)
-      return selectedScript.onLoop();
-    return 100;
+    addNodes(selectedScript.getNodes());
   }
 
   @Override

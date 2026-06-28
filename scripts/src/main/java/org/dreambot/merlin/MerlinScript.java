@@ -1,6 +1,7 @@
 package org.dreambot.merlin;
 
 import org.dreambot.api.script.AbstractScript;
+import org.dreambot.api.script.TaskNode;
 
 /**
  * Base class for all Merlin sub-scripts. Provides access to the main
@@ -22,20 +23,19 @@ public abstract class MerlinScript {
   }
 
   /**
+   * Returns the array of TaskNode instances that define the behavior of the
+   * sub-script.
+   *
+   * @return an array of TaskNode instances
+   */
+  public abstract TaskNode[] getNodes();
+
+  /**
    * Called when the script starts. Override this method to perform any
    * initialization or setup required for the sub-script.
    */
   public void onStart() {
   }
-
-  /**
-   * Called repeatedly while the script is running. Override this method to
-   * implement the main logic of the sub-script. Return an integer indicating
-   * the delay (in milliseconds) before the next loop iteration.
-   *
-   * @return the delay before the next loop iteration
-   */
-  public abstract int onLoop();
 
   /**
    * Called when the script is paused. Override this method to handle any
