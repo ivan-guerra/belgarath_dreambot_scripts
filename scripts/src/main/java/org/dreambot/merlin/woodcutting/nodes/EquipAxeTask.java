@@ -10,6 +10,7 @@ import org.dreambot.api.utilities.Logger;
 import org.dreambot.api.utilities.Sleep;
 import org.dreambot.api.wrappers.items.Item;
 import org.dreambot.merlin.common.Utility;
+import org.dreambot.merlin.woodcutting.Axe;
 
 /**
  * Task node for equipping an axe from the player's inventory or withdrawing one
@@ -17,49 +18,14 @@ import org.dreambot.merlin.common.Utility;
  */
 public class EquipAxeTask extends TaskNode {
   /**
-   * Enum representing different types of axes available for woodcutting.
-   */
-  private enum Axe {
-    DRAGON("Dragon axe", 61, 60),
-    RUNE("Rune axe", 41, 40),
-    ADAMANT("Adamant axe", 30, 30),
-    MITHRIL("Mithril axe", 20, 20),
-    STEEL("Steel axe", 6, 5),
-    IRON("Iron axe", 1, 1),
-    BRONZE("Bronze axe", 1, 1);
-
-    private final String name;
-    private final int woodcutLvlReq;
-    private final int attackLvlReq;
-
-    Axe(String name, int woodcutLvlReq, int attackLvlReq) {
-      this.name = name;
-      this.woodcutLvlReq = woodcutLvlReq;
-      this.attackLvlReq = attackLvlReq;
-    }
-
-    public String getName() {
-      return name;
-    }
-
-    public int getWoodcutLvlReq() {
-      return woodcutLvlReq;
-    }
-
-    public int getAttackLvlReq() {
-      return attackLvlReq;
-    }
-  }
-
-  /**
    * Determines whether the player is currently wielding an axe.
    *
    * @return true if the player is not wielding an axe, false otherwise
    */
   @Override
   public boolean accept() {
-    String axeSubStr = "axe";
-    boolean hasAxeEquipped = Equipment
+    final String axeSubStr = "axe";
+    final boolean hasAxeEquipped = Equipment
         .contains(item -> item != null && item.getName().toLowerCase().contains(axeSubStr));
 
     return !hasAxeEquipped;
