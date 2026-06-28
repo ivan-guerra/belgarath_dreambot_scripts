@@ -10,6 +10,7 @@ import org.dreambot.api.methods.container.impl.bank.Bank;
 import org.dreambot.api.methods.container.impl.equipment.Equipment;
 import org.dreambot.api.methods.interactive.GameObjects;
 import org.dreambot.api.methods.interactive.Players;
+import org.dreambot.api.methods.map.Tile;
 import org.dreambot.api.methods.skills.Skill;
 import org.dreambot.api.methods.skills.Skills;
 import org.dreambot.api.methods.world.Worlds;
@@ -22,6 +23,7 @@ import org.dreambot.api.wrappers.items.Item;
 import org.dreambot.merlin.MerlinScript;
 import org.dreambot.merlin.common.AntiBan;
 import org.dreambot.merlin.common.Utility;
+import org.dreambot.merlin.common.WalkingUtils;
 
 /**
  * Main class for the woodcutting script. This script is purely meant for
@@ -41,7 +43,7 @@ public class WoodcuttingScript extends MerlinScript implements PaintListener {
   /**
    * Enum representing different types of axes available for woodcutting.
    */
-  public enum Axe {
+  private enum Axe {
     DRAGON("Dragon axe", 61, 60),
     RUNE("Rune axe", 41, 40),
     ADAMANT("Adamant axe", 30, 30),
@@ -77,19 +79,22 @@ public class WoodcuttingScript extends MerlinScript implements PaintListener {
    * Enum representing different types of trees available for woodcutting.
    */
   private enum Tree {
-    Normal("Tree", 1, 49), Oak("Oak tree", 15, 9), Willow("Willow tree", 30, 9), Maple("Maple tree", 45, 36),
-    Yew("Yew tree", 60, 60),
-    Magic("Magic tree", 75, 120), Ironwood("Ironwood tree", 80, 120), Redwood("Redwood tree", 90, 120),
-    Rosewood("Rosewood tree", 92, 123);
+    // TODO: Add actual tree locations for each tree type
+    Normal("Tree", 1, 49, new Tile(3204, 3243, 0)), Oak("Oak tree", 15, 9, new Tile(3204, 3243, 0)),
+    Willow("Willow tree", 30, 9, new Tile(3204, 3243, 0)),
+    Maple("Maple tree", 45, 36, new Tile(3204, 3243, 0)),
+    Redwood("Redwood tree", 90, 120, new Tile(3204, 3243, 0));
 
     private final String name;
     private final int levelRequirement;
     private final long respawnTimeSec;
+    private final Tile location;
 
-    Tree(String name, int levelRequirement, long respawnTimeSec) {
+    Tree(String name, int levelRequirement, long respawnTimeSec, Tile location) {
       this.name = name;
       this.levelRequirement = levelRequirement;
       this.respawnTimeSec = respawnTimeSec;
+      this.location = location;
     }
 
     public String getName() {
@@ -102,6 +107,10 @@ public class WoodcuttingScript extends MerlinScript implements PaintListener {
 
     public long getRespawnTimeMSec() {
       return respawnTimeSec * 1000;
+    }
+
+    public Tile getLocation() {
+      return location;
     }
 
     @Override
@@ -183,6 +192,12 @@ public class WoodcuttingScript extends MerlinScript implements PaintListener {
         // Player is in the process of walking to the bank
         return 600;
       }
+    }
+
+    // Walk to the selected tree's location if not already nearby
+    if (Players.getLocal().distance(selectedTree.getLocation()) > MAX_TREE_DIST) {
+      WalkingUtils.walkToTile(selectedTree.getLocation());
+      return 600; // Wait for the player to reach the tree location
     }
 
     // Always check if the inventory is full before attempting to chop a tree
