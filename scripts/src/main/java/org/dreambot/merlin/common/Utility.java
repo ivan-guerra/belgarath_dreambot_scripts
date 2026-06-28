@@ -81,9 +81,9 @@ public class Utility {
     World world = null;
 
     if (isF2P) {
-      world = Worlds.getRandomWorld(w -> w.isF2P() && !w.isPVP());
+      world = Worlds.getRandomWorld(w -> w.isF2P() && !w.isPVP() && w.getMinimumLevel() == 0);
     } else {
-      world = Worlds.getRandomWorld(w -> !w.isF2P() && !w.isPVP());
+      world = Worlds.getRandomWorld(w -> !w.isF2P() && !w.isPVP() && w.getMinimumLevel() == 0);
     }
 
     WorldHopper.hopWorld(world);
