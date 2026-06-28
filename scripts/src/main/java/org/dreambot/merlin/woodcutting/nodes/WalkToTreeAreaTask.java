@@ -24,7 +24,7 @@ public class WalkToTreeAreaTask extends TaskNode {
 
   @Override
   public boolean accept() {
-    boolean isInTreeArea = Players.getLocal().distance(selectedTree.getLocation()) <= MAX_TREE_DIST;
+    final boolean isInTreeArea = Players.getLocal().distance(selectedTree.getLocation()) <= MAX_TREE_DIST;
 
     return !isInTreeArea;
   }
