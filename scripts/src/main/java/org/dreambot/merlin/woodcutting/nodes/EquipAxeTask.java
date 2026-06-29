@@ -31,6 +31,12 @@ public class EquipAxeTask extends TaskNode {
     return !hasAxeEquipped;
   }
 
+  /**
+   * Attempts to equip an axe from the player's inventory or withdraw one from
+   * the bank if not already equipped.
+   *
+   * @return 1000 if the task was successful, -1 if it failed
+   */
   @Override
   public int execute() {
     Logger.info("Attempting to equip an axe from inventory.");

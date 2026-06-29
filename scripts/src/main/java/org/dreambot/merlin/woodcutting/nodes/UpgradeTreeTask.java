@@ -27,11 +27,23 @@ public class UpgradeTreeTask extends TaskNode {
     this.tree = tree;
   }
 
+  /**
+   * Checks if the player can upgrade to a better tree type based on their
+   * woodcutting level and membership status.
+   *
+   * @return true if the player can upgrade to a better tree, false otherwise
+   */
   @Override
   public boolean accept() {
     return getBestTree() != tree.get();
   }
 
+  /**
+   * Upgrades the tree type to the best available tree based on the player's
+   * woodcutting level and membership status, hopping worlds if necessary.
+   *
+   * @return 1000 if the upgrade was successful, -1 if it failed
+   */
   @Override
   public int execute() {
     Tree current = tree.get();

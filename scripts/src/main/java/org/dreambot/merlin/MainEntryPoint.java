@@ -29,6 +29,10 @@ public class MainEntryPoint extends TaskScript {
     }
   }
 
+  /**
+   * Initializes the selected script based on the provided parameters.
+   * Defaults to {@link WoodcuttingScript} if no valid parameters are provided.
+   */
   @Override
   public void onStart() {
     switch (Optional.ofNullable(getSDNParameters()).orElse("")) {

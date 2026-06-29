@@ -24,12 +24,22 @@ public class PlayerAvoidanceTask extends TaskNode {
     this.currTree = tree;
   }
 
+  /**
+   * Checks if another player is currently using the specified tree.
+   *
+   * @return true if another player is using the tree, false otherwise
+   */
   @Override
   public boolean accept() {
     GameObject tree = GameObjects.closest(currTree.get().getName());
     return Utility.isSomeoneElseUsingNode(tree);
   }
 
+  /**
+   * Hops to a different world if another player is using the specified tree.
+   *
+   * @return 1000 if the world hop was successful, -1 if it failed
+   */
   @Override
   public int execute() {
     if (!Utility.hopWorld()) {

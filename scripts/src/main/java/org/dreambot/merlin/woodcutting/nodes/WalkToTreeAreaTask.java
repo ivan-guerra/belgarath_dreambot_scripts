@@ -23,6 +23,11 @@ public class WalkToTreeAreaTask extends TaskNode {
     this.currTree = tree;
   }
 
+  /**
+   * Checks if the player is within the area of the specified tree type.
+   *
+   * @return true if the player is not in the tree area, false otherwise
+   */
   @Override
   public boolean accept() {
     final boolean isInTreeArea = Players.getLocal().distance(currTree.get().getLocation()) <= MAX_TREE_DIST;
@@ -30,6 +35,11 @@ public class WalkToTreeAreaTask extends TaskNode {
     return !isInTreeArea;
   }
 
+  /**
+   * Walks to the area of the specified tree type.
+   *
+   * @return 1000 if the walk was successful, -1 if it failed
+   */
   @Override
   public int execute() {
     WalkingUtils.walkToTile(currTree.get().getLocation());

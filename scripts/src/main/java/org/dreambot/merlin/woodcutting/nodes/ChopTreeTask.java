@@ -27,11 +27,22 @@ public class ChopTreeTask extends TaskNode {
     this.currTree = tree;
   }
 
+  /**
+   * Checks if the player can chop the specified tree.
+   *
+   * @return true if the inventory is not full and the tree is present, false
+   *         otherwise
+   */
   @Override
   public boolean accept() {
     return !Inventory.isFull() && (GameObjects.closest(currTree.get().getName()) != null);
   }
 
+  /**
+   * Executes the chopping action on the specified tree.
+   *
+   * @return 1000 if the action was successful, -1 if it failed
+   */
   @Override
   public int execute() {
     final long chopTimeoutMs = 3000;
