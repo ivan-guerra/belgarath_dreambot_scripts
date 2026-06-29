@@ -43,7 +43,6 @@ public class Utility {
    * @return true if the items were successfully dropped, false otherwise.
    */
   public static boolean dropVerticalOrdering(String itemName) {
-    Keyboard.pressShift();
     // Drop items by columns in a 28 slot inventory (0-27), starting from the
     // top-left and going down each column
     int[] ordered_slots = { 0, 4, 8, 12, 16, 20, 24, 1, 5, 9, 13, 17, 21, 25, 2, 6, 10, 14, 18, 22, 26,
@@ -55,6 +54,7 @@ public class Utility {
       return false;
     }
 
+    Keyboard.pressShift();
     for (int slot : ordered_slots) {
       Item item = Inventory.getItemInSlot(slot);
       if (item != null && item.getName().toLowerCase().contains(itemName.toLowerCase())) {
