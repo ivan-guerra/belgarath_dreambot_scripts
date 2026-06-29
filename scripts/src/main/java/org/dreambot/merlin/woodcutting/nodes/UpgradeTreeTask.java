@@ -51,7 +51,7 @@ public class UpgradeTreeTask extends TaskNode {
     Logger.info("Upgrading tree from " + current.getName() + " to " + best.getName() + ".");
     tree.set(best);
 
-    if (best.isP2P() && (Worlds.getCurrent() == null || !Worlds.getCurrent().isMembers())) {
+    if (best.isMembers() && (Worlds.getCurrent() == null || !Worlds.getCurrent().isMembers())) {
       Logger.info("Best tree is P2P but current world is F2P, hopping to a members world.");
       if (!Utility.hopToMembersWorld()) {
         Logger.error("Failed to hop to a members world.");
@@ -73,7 +73,7 @@ public class UpgradeTreeTask extends TaskNode {
     Tree best = Tree.Normal;
 
     for (Tree t : Tree.values()) {
-      if (woodcutLevel >= t.getLevelReq() && (!t.isP2P() || hasMembership)) {
+      if (woodcutLevel >= t.getLevelReq() && (!t.isMembers() || hasMembership)) {
         best = t;
       }
     }

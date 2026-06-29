@@ -18,7 +18,7 @@ public enum Tree {
   private final String name;
   private final int levelRequirement;
   private final Tile location;
-  private final boolean isP2P;
+  private final boolean isMembers;
 
   /**
    * Constructs a new Tree enum value with the specified name, level requirement,
@@ -27,14 +27,14 @@ public enum Tree {
    * @param name             The name of the tree type.
    * @param levelRequirement The level requirement for cutting this type of tree.
    * @param location         The location of the tree type.
-   * @param isP2P            Whether the tree type is members-only (P2P) or
+   * @param isMembers        Whether the tree type is members-only (P2P) or
    *                         free-to-play (F2P).
    */
-  Tree(String name, int levelRequirement, Tile location, boolean isP2P) {
+  Tree(String name, int levelRequirement, Tile location, boolean isMembers) {
     this.name = name;
     this.levelRequirement = levelRequirement;
     this.location = location;
-    this.isP2P = isP2P;
+    this.isMembers = isMembers;
   }
 
   /**
@@ -70,8 +70,8 @@ public enum Tree {
    * @return True if the tree type is members-only (P2P), false if it is
    *         free-to-play (F2P).
    */
-  public boolean isP2P() {
-    return isP2P;
+  public boolean isMembers() {
+    return isMembers;
   }
 
   @Override
