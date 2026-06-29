@@ -8,6 +8,7 @@ import org.dreambot.api.script.TaskNode;
 import org.dreambot.api.script.listener.PaintListener;
 import org.dreambot.merlin.MerlinScript;
 import org.dreambot.merlin.common.AntiBanTask;
+import org.dreambot.merlin.common.PlayerAvoidanceTask;
 import org.dreambot.merlin.woodcutting.nodes.ChopTreeTask;
 import org.dreambot.merlin.woodcutting.nodes.DropLogsTask;
 import org.dreambot.merlin.woodcutting.nodes.EquipAxeTask;
@@ -41,6 +42,7 @@ public class WoodcuttingScript extends MerlinScript implements PaintListener {
     return new TaskNode[] { this.antiBan, new UpgradeTreeTask(currTree), new EquipAxeTask(),
         new WalkToTreeAreaTask(currTree),
         new DropLogsTask(),
+        new PlayerAvoidanceTask(currTree),
         new ChopTreeTask(currTree) };
   }
 }

@@ -110,7 +110,7 @@ public class Utility {
 
   /**
    * Checks if another player is currently using the specified game object.
-   * A player is considered to be using the node if they are within 1 tile of it
+   * A player is considered to be using the node if they are within 2 tiles of it
    * and are currently playing an animation.
    *
    * @param target The game object to check for other players using it.
@@ -129,9 +129,9 @@ public class Utility {
         continue;
       }
 
-      // Check if the player is within 1 tile of the target object and playing the
-      // animation
-      if (p.distance(target) <= 1 && p.isAnimating()) {
+      // Check if the player is within 2 tiles of the target object and playing
+      // the animation
+      if ((p.distance(target) <= 2) && p.isAnimating()) {
         return true;
       }
     }
