@@ -21,15 +21,14 @@ public class WalkingUtils {
    */
   public static void walkToTile(Tile tile) {
     if (System.currentTimeMillis() < currentTime + currentWalkCooldown) {
-      Logger.info("Walk cooldown!");
       return;
     }
 
     if (!Walking.shouldWalk(tilesBeforeWeWalkAgain)) {
-      Logger.info("Should not walk until closer to target.");
       return;
     }
 
+    Logger.info("Walking to tile " + tile + ".");
     Walking.walk(tile);
     currentTime = System.currentTimeMillis();
     currentWalkCooldown = Calculations.random(800, 1400);

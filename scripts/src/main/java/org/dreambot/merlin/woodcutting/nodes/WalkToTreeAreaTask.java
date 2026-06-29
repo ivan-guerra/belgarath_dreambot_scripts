@@ -4,7 +4,6 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import org.dreambot.api.methods.interactive.Players;
 import org.dreambot.api.script.TaskNode;
-import org.dreambot.api.utilities.Logger;
 import org.dreambot.merlin.common.WalkingUtils;
 import org.dreambot.merlin.woodcutting.Tree;
 
@@ -33,7 +32,6 @@ public class WalkToTreeAreaTask extends TaskNode {
 
   @Override
   public int execute() {
-    Logger.info("Walking to " + currTree.get().getName() + " area.");
     WalkingUtils.walkToTile(currTree.get().getLocation());
     return 1000;
   }
