@@ -2,15 +2,18 @@ package org.dreambot.merlin.woodcutting.nodes;
 
 import java.util.concurrent.atomic.AtomicReference;
 
+import org.dreambot.api.Client;
 import org.dreambot.api.methods.skills.Skill;
 import org.dreambot.api.methods.skills.Skills;
+import org.dreambot.api.methods.world.Worlds;
 import org.dreambot.api.script.TaskNode;
 import org.dreambot.api.utilities.Logger;
+import org.dreambot.merlin.common.Utility;
 import org.dreambot.merlin.woodcutting.Tree;
 
 /**
  * Task node for upgrading the tree type based on the player's woodcutting
- * level.
+ * level and membership status, hopping worlds if necessary.
  */
 public class UpgradeTreeTask extends TaskNode {
   private final AtomicReference<Tree> tree;
@@ -26,26 +29,42 @@ public class UpgradeTreeTask extends TaskNode {
 
   @Override
   public boolean accept() {
-    Tree current = tree.get();
-    Tree[] trees = Tree.values();
-    int nextOrdinal = current.ordinal() + 1;
-
-    if (nextOrdinal >= trees.length) {
-      return false;
-    }
-
-    Tree nextTree = trees[nextOrdinal];
-    return Skills.getRealLevel(Skill.WOODCUTTING) >= nextTree.getLevelReq();
+    return getBestTree() != tree.get();
   }
 
   @Override
   public int execute() {
     Tree current = tree.get();
-    Tree nextTree = Tree.values()[current.ordinal() + 1];
+    Tree best = getBestTree();
+    Logger.info("Upgrading tree from " + current.getName() + " to " + best.getName() + ".");
+    tree.set(best);
 
-    Logger.info("Upgrading tree from " + current.getName() + " to " + nextTree.getName() + ".");
-    tree.set(nextTree);
-
+    if (best.isP2P() && (Worlds.getCurrent() == null || !Worlds.getCurrent().isMembers())) {
+      Logger.info("Best tree is P2P but current world is F2P, hopping to a members world.");
+      if (!Utility.hopToMembersWorld()) {
+        Logger.error("Failed to hop to a members world.");
+        return -1;
+      }
+    }
     return 1000;
+  }
+
+  /**
+   * Returns the highest-level tree available to the player based on their
+   * woodcutting level and account membership status.
+   *
+   * @return The best available {@link Tree} for the player.
+   */
+  private Tree getBestTree() {
+    final int woodcutLevel = Skills.getRealLevel(Skill.WOODCUTTING);
+    final boolean hasMembership = Client.getMembershipLeft() > 0;
+    Tree best = Tree.Normal;
+
+    for (Tree t : Tree.values()) {
+      if (woodcutLevel >= t.getLevelReq() && (!t.isP2P() || hasMembership)) {
+        best = t;
+      }
+    }
+    return best;
   }
 }

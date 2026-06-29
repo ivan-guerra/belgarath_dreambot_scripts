@@ -3,12 +3,9 @@ package org.dreambot.merlin.woodcutting;
 import java.awt.Graphics2D;
 import java.util.concurrent.atomic.AtomicReference;
 
-import org.dreambot.api.methods.skills.Skill;
-import org.dreambot.api.methods.skills.Skills;
 import org.dreambot.api.script.AbstractScript;
 import org.dreambot.api.script.TaskNode;
 import org.dreambot.api.script.listener.PaintListener;
-import org.dreambot.api.utilities.Logger;
 import org.dreambot.merlin.MerlinScript;
 import org.dreambot.merlin.common.AntiBanTask;
 import org.dreambot.merlin.woodcutting.nodes.ChopTreeTask;
@@ -37,24 +34,6 @@ public class WoodcuttingScript extends MerlinScript implements PaintListener {
   @Override
   public void onPaint(Graphics2D g) {
     antiBan.onPaint(g);
-  }
-
-  @Override
-  public void onStart() {
-    int woodcutLevel = Skills.getRealLevel(Skill.WOODCUTTING);
-    Tree best = Tree.Normal;
-
-    // Find the best tree the player can chop based on their woodcutting level
-    for (int i = Tree.values().length - 1; i >= 0; i--) {
-      Tree t = Tree.values()[i];
-      if (woodcutLevel >= t.getLevelReq()) {
-        best = t;
-        break;
-      }
-    }
-
-    currTree.set(best);
-    Logger.info("Starting woodcutting script. Current tree: " + currTree.get().getName());
   }
 
   @Override

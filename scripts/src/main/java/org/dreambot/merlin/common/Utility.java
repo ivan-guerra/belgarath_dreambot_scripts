@@ -75,7 +75,7 @@ public class Utility {
    * @return true if the world hop was successful, false otherwise.
    */
   public static boolean hopWorld() {
-    return Client.hasMembersAccess() ? hopToMembersWorld() : hopToF2PWorld();
+    return Client.getMembershipLeft() > 0 ? hopToMembersWorld() : hopToF2PWorld();
   }
 
   /**
