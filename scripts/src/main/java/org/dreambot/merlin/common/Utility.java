@@ -69,26 +69,43 @@ public class Utility {
   }
 
   /**
-   * Hops to a random world based on the current world type (F2P or P2P). If the
-   * current world is F2P, it will hop to a random F2P world. If the current world
-   * is P2P, it will hop to a random P2P world. PvP worlds are excluded from the
-   * selection.
+   * Hops to a random world based on the player's membership status (members or
+   * free-to-play).
    *
    * @return true if the world hop was successful, false otherwise.
    */
   public static boolean hopWorld() {
-    boolean isF2P = Worlds.f2p().contains(Worlds.getCurrent());
-    World world = null;
+    return Client.hasMembersAccess() ? hopToMembersWorld() : hopToF2PWorld();
+  }
 
-    if (isF2P) {
-      world = Worlds.getRandomWorld(w -> w.isF2P() && !w.isPVP() && w.getMinimumLevel() == 0);
-    } else {
-      world = Worlds.getRandomWorld(w -> !w.isF2P() && !w.isPVP() && w.getMinimumLevel() == 0);
+  /**
+   * Hops to a random members (P2P) world that is not a PvP world and has no
+   * minimum level requirement.
+   *
+   * @return true if the world hop was successful, false otherwise.
+   */
+  public static boolean hopToMembersWorld() {
+    World world = Worlds.getRandomWorld(w -> !w.isF2P() && !w.isPVP() && w.getMinimumLevel() == 0);
+    if (world != null) {
+      WorldHopper.hopWorld(world);
+      return Sleep.sleepUntil(() -> Client.getGameState() != GameState.HOPPING, WORLD_HOP_TIMEOUT_MS);
     }
+    return false;
+  }
 
-    WorldHopper.hopWorld(world);
-
-    return Sleep.sleepUntil(() -> Client.getGameState() != GameState.HOPPING, WORLD_HOP_TIMEOUT_MS);
+  /**
+   * Hops to a random free-to-play (F2P) world that is not a PvP world and has no
+   * minimum level requirement.
+   *
+   * @return true if the world hop was successful, false otherwise.
+   */
+  public static boolean hopToF2PWorld() {
+    World world = Worlds.getRandomWorld(w -> w.isF2P() && !w.isPVP() && w.getMinimumLevel() == 0);
+    if (world != null) {
+      WorldHopper.hopWorld(world);
+      return Sleep.sleepUntil(() -> Client.getGameState() != GameState.HOPPING, WORLD_HOP_TIMEOUT_MS);
+    }
+    return false;
   }
 
   /**
