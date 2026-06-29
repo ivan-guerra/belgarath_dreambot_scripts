@@ -91,13 +91,14 @@ public class EquipAxeTask extends TaskNode {
     final int woodcutLevel = Skills.getRealLevel(Skill.WOODCUTTING);
     final int attackLevel = Skills.getRealLevel(Skill.ATTACK);
     final long withDrawTimeoutMs = 5000;
+    final long depositTimeoutMs = 5000;
 
     if (!Bank.isOpen()) {
       Logger.error("Called withdrawAxeFromBank() but bank is not open.");
       return false;
     }
 
-    if (!Bank.depositAllItems()) {
+    if (!Bank.depositAllItems() || !Sleep.sleepUntil(() -> Inventory.isEmpty(), depositTimeoutMs)) {
       Logger.error("Failed to deposit all items in bank.");
       return false;
     }
