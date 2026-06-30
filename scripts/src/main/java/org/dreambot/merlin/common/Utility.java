@@ -4,6 +4,8 @@ import org.dreambot.api.Client;
 import org.dreambot.api.data.GameState;
 import org.dreambot.api.input.Keyboard;
 import org.dreambot.api.methods.container.impl.Inventory;
+import org.dreambot.api.methods.container.impl.bank.Bank;
+import org.dreambot.api.methods.container.impl.equipment.Equipment;
 import org.dreambot.api.methods.interactive.Players;
 import org.dreambot.api.methods.tabs.Tab;
 import org.dreambot.api.methods.tabs.Tabs;
@@ -18,20 +20,17 @@ import org.dreambot.api.wrappers.items.Item;
 
 /** Utility class providing common helper methods for DreamBot scripts. */
 public class Utility {
-  /** Maximum time in milliseconds to wait for an item to be dropped. */
-  private static final int DROP_TIMEOUT_MS = 3000;
-
-  /** Time in milliseconds to poll between state checks. */
-  public static final int POLL_DELAY_MS = 100;
-
-  /** Maximum time in milliseconds to wait for a world hop to complete. */
-  public static final int WORLD_HOP_TIMEOUT_MS = 5000;
-
-  /** Maximum time in milliseconds to wait for a tab to open. */
-  public static final int OPEN_TAB_TIMEOUT_MS = 3000;
+  private static final long DROP_TIMEOUT_MS = 3000;
+  private static final long POLL_DELAY_MS = 100;
+  private static final long WORLD_HOP_TIMEOUT_MS = 5000;
+  private static final long OPEN_TAB_TIMEOUT_MS = 3000;
+  private static final long EQUIP_ITEM_TIMEOUT_MS = 5000;
+  private static final long WITHDRAW_TIMEOUT_MS = 5000;
+  private static final long DEPOSIT_TIMEOUT_MS = 5000;
+  private static final long BANK_CLOSE_TIMEOUT_MS = 2000;
 
   /** Private constructor to prevent instantiation of the Utility class. */
-  public Utility() {
+  private Utility() {
     // Private constructor to prevent instantiation
   }
 
@@ -153,5 +152,79 @@ public class Utility {
    */
   public static void closeAllInterfaces() {
     Keyboard.pressEsc();
+  }
+
+  /**
+   * Checks if the player has an item equipped that matches the specified item
+   * name.
+   *
+   * @param itemName The name of the item to check for (case-insensitive).
+   * @return true if the player has the item equipped, false otherwise.
+   */
+  public static boolean isEquipped(String itemName) {
+    return Equipment.contains(item -> item != null && item.getName().toLowerCase().contains(itemName.toLowerCase()));
+  }
+
+  /**
+   * Equips an item from the inventory if it is not already equipped.
+   *
+   * @param itemName The name of the item to equip (case-insensitive).
+   * @return true if the item is equipped or was successfully equipped, false
+   *         otherwise.
+   */
+  public static boolean equipItem(String itemName) {
+    // Open the inventory tab to access the item to equip
+    if (!Utility.openInventoryTab()) {
+      Logger.error("Failed to open inventory tab.");
+      return false;
+    }
+
+    Item itemHandle = Inventory.get(item -> item != null && (item.getName().toLowerCase() == itemName.toLowerCase()));
+    if (itemHandle != null && itemHandle.interact()) {
+      return Sleep.sleepUntil(() -> Utility.isEquipped(itemName), EQUIP_ITEM_TIMEOUT_MS);
+    }
+    return false;
+  }
+
+  /**
+   * Checks if the player has an item in their inventory that matches the
+   * specified item name.
+   *
+   * @param itemName The name of the item to check for (case-insensitive).
+   * @return true if the player has the item in their inventory, false otherwise.
+   */
+  public static boolean isInInventory(String itemName) {
+    return Inventory.contains(item -> item != null && item.getName().toLowerCase().contains(itemName.toLowerCase()));
+  }
+
+  /**
+   * Withdraws an item from the bank if it is available, depositing all other
+   * items first.
+   *
+   * @param itemName The name of the item to withdraw (case-insensitive).
+   * @return true if the item was successfully withdrawn, false otherwise.
+   */
+  public static boolean withdrawItemFromBank(String itemName) {
+    if (!Bank.isOpen()) {
+      Logger.error("Called withdrawItemFromBank() but bank is not open.");
+      return false;
+    }
+
+    if (!Bank.depositAllItems() || !Sleep.sleepUntil(() -> Inventory.isEmpty(), DEPOSIT_TIMEOUT_MS)) {
+      Logger.error("Failed to deposit all items in bank.");
+      return false;
+    }
+
+    if (Bank.contains(itemName)) {
+      if (Bank.withdraw(itemName, 1)) {
+        boolean withdrawn = Sleep.sleepUntil(() -> Inventory.contains(itemName), WITHDRAW_TIMEOUT_MS);
+        if (!Bank.close() || !Sleep.sleepUntil(() -> !Bank.isOpen(), BANK_CLOSE_TIMEOUT_MS)) {
+          Logger.error("Failed to close bank after withdrawal attempt.");
+          return false;
+        }
+        return withdrawn;
+      }
+    }
+    return false;
   }
 }
