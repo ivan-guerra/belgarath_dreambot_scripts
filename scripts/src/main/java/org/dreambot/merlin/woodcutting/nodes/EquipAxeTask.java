@@ -53,9 +53,9 @@ public class EquipAxeTask extends TaskNode {
       }
     } else if (Bank.open()) {
       if (Utility.withdrawItemFromBank(axeName)) {
-        Logger.info("Withdrew axe " + axeName + " from bank.");
+        Logger.info("Withdrew " + axeName + " from bank.");
       } else {
-        Logger.error("Failed to withdraw axe " + axeName + " from bank.");
+        Logger.error("Failed to withdraw " + axeName + " from bank.");
         return -1;
       }
     }
