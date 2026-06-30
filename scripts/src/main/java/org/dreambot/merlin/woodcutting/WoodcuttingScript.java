@@ -45,7 +45,7 @@ public class WoodcuttingScript extends MerlinScript implements PaintListener {
         new EquipAxeTask(currAxe),
         new WalkToTreeAreaTask(currTree),
         new DropLogsTask(),
-        new PlayerAvoidanceTask(currTree),
+        new PlayerAvoidanceTask<Tree>(currTree),
         new ChopTreeTask(currTree) };
   }
 }
