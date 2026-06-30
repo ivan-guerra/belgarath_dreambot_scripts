@@ -9,7 +9,6 @@ import org.dreambot.api.script.TaskNode;
 import org.dreambot.api.utilities.Logger;
 import org.dreambot.api.utilities.Sleep;
 import org.dreambot.api.wrappers.interactive.GameObject;
-import org.dreambot.merlin.common.Utility;
 import org.dreambot.merlin.woodcutting.Tree;
 
 /**
@@ -46,12 +45,13 @@ public class ChopTreeTask extends TaskNode {
   @Override
   public int execute() {
     final long chopTimeoutMs = 3000;
+    final long pollDelayMs = 100;
     GameObject tree = GameObjects.closest(currTree.get().getName());
 
     Logger.info("Chopping " + currTree.get().getName() + " at tile " + tree.getTile() + ".");
     tree.interact("Chop down");
     Sleep.sleepUntil(() -> !tree.exists() || Inventory.isFull(), () -> Players.getLocal().isAnimating(), chopTimeoutMs,
-        Utility.POLL_DELAY_MS);
+        pollDelayMs);
 
     return 1000;
   }
