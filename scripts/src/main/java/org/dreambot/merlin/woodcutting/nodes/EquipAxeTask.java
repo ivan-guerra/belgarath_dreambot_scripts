@@ -1,22 +1,29 @@
 package org.dreambot.merlin.woodcutting.nodes;
 
-import org.dreambot.api.methods.container.impl.Inventory;
+import java.util.concurrent.atomic.AtomicReference;
+
 import org.dreambot.api.methods.container.impl.bank.Bank;
-import org.dreambot.api.methods.container.impl.equipment.Equipment;
-import org.dreambot.api.methods.skills.Skill;
-import org.dreambot.api.methods.skills.Skills;
 import org.dreambot.api.script.TaskNode;
 import org.dreambot.api.utilities.Logger;
-import org.dreambot.api.utilities.Sleep;
-import org.dreambot.api.wrappers.items.Item;
 import org.dreambot.merlin.common.Utility;
 import org.dreambot.merlin.woodcutting.Axe;
 
 /**
- * Task node for equipping an axe from the player's inventory or withdrawing one
- * from the bank if not already equipped.
+ * Task node for equipping an axe in the game.
  */
 public class EquipAxeTask extends TaskNode {
+  private final AtomicReference<Axe> currAxe;
+
+  /**
+   * Constructs a new EquipAxeTask with the given AtomicReference to the current
+   * axe.
+   *
+   * @param currAxe an AtomicReference to the current axe being used
+   */
+  public EquipAxeTask(AtomicReference<Axe> currAxe) {
+    this.currAxe = currAxe;
+  }
+
   /**
    * Determines whether the player is currently wielding an axe.
    *
@@ -24,101 +31,34 @@ public class EquipAxeTask extends TaskNode {
    */
   @Override
   public boolean accept() {
-    final String axeSubStr = "axe";
-    final boolean hasAxeEquipped = Equipment
-        .contains(item -> item != null && item.getName().toLowerCase().contains(axeSubStr));
-
-    return !hasAxeEquipped;
+    return !Utility.isEquipped(currAxe.get().getName());
   }
 
   /**
-   * Attempts to equip an axe from the player's inventory or withdraw one from
-   * the bank if not already equipped.
+   * Equips the current axe if it is in the player's inventory, or withdraws it
+   * from the bank if it is not.
    *
    * @return 1000 if the task was successful, -1 if it failed
    */
   @Override
   public int execute() {
-    Logger.info("Attempting to equip an axe from inventory.");
-    if (!equipAxe()) {
-      Logger.info("No axe in inventory, attempting to withdraw one from the bank.");
-      if (Bank.open()) {
-        Logger.info("Bank opened, attempting to withdraw and equip an axe.");
-        if (!withdrawAxeFromBank() || !equipAxe()) {
-          Logger.error("Failed to withdraw or equip an axe, stopping script.");
-          return -1;
-        }
+    final String axeName = currAxe.get().getName();
+
+    if (Utility.isInInventory(axeName)) {
+      if (Utility.equipItem(axeName)) {
+        Logger.info("Equipped " + axeName + ".");
+      } else {
+        Logger.error("Failed to equip " + axeName + ".");
+        return -1;
+      }
+    } else if (Bank.open()) {
+      if (Utility.withdrawItemFromBank(axeName)) {
+        Logger.info("Withdrew axe " + axeName + " from bank.");
+      } else {
+        Logger.error("Failed to withdraw axe " + axeName + " from bank.");
+        return -1;
       }
     }
     return 1000;
-  }
-
-  /**
-   * Equips an axe from the inventory if not already equipped.
-   *
-   * @return true if an axe is equipped or was successfully equipped, false
-   *         otherwise
-   */
-  private boolean equipAxe() {
-    final String axeSubStr = "axe";
-    final String interactOption = "Wield";
-    final long wieldTimeoutMs = 5000;
-
-    // Open the inventory tab to access the axe
-    if (!Utility.openInventoryTab()) {
-      Logger.error("Failed to open inventory tab.");
-      return false;
-    }
-
-    // Find an axe in the inventory and attempt to wield it
-    Item axe = Inventory.get(item -> item != null && item.getName().toLowerCase().contains(axeSubStr));
-    if (axe != null && axe.interact(interactOption)) {
-      return Sleep.sleepUntil(
-          () -> Equipment.contains(item -> item != null && item.getName().toLowerCase().contains(axeSubStr)),
-          wieldTimeoutMs);
-    }
-    return false;
-  }
-
-  /**
-   * Withdraws the best axe available in the nearest bank that the player
-   * has the required woodcutting and attack levels to use.
-   *
-   * @return true if an axe was successfully withdrawn, false if no suitable
-   *         axe was found or the bank could not be opened.
-   */
-  private boolean withdrawAxeFromBank() {
-    final int woodcutLevel = Skills.getRealLevel(Skill.WOODCUTTING);
-    final int attackLevel = Skills.getRealLevel(Skill.ATTACK);
-    final long withDrawTimeoutMs = 5000;
-    final long depositTimeoutMs = 5000;
-
-    if (!Bank.isOpen()) {
-      Logger.error("Called withdrawAxeFromBank() but bank is not open.");
-      return false;
-    }
-
-    if (!Bank.depositAllItems() || !Sleep.sleepUntil(() -> Inventory.isEmpty(), depositTimeoutMs)) {
-      Logger.error("Failed to deposit all items in bank.");
-      return false;
-    }
-
-    for (Axe axe : Axe.values()) {
-      if (woodcutLevel >= axe.getWoodcutLvlReq() && attackLevel >= axe.getAttackLvlReq()
-          && Bank.contains(axe.getName())) {
-        if (Bank.withdraw(axe.getName(), 1)) {
-          boolean withdrawn = Sleep.sleepUntil(() -> Inventory.contains(axe.getName()), withDrawTimeoutMs);
-          if (!Bank.close()) {
-            Logger.error("Failed to close bank after withdrawing axe.");
-            return false;
-          }
-          return withdrawn;
-        }
-      }
-    }
-
-    Logger.error(
-        "No suitable axe found in bank for current levels (WC: " + woodcutLevel + ", ATK: " + attackLevel + ").");
-    return false;
   }
 }

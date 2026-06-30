@@ -42,7 +42,7 @@ public class WoodcuttingScript extends MerlinScript implements PaintListener {
   @Override
   public TaskNode[] getNodes() {
     return new TaskNode[] { this.antiBan, new UpgradeTreeTask(currTree), new UpgradeAxeTask(currAxe),
-        new EquipAxeTask(),
+        new EquipAxeTask(currAxe),
         new WalkToTreeAreaTask(currTree),
         new DropLogsTask(),
         new PlayerAvoidanceTask(currTree),
