@@ -27,7 +27,7 @@ public class DropLogsTask extends TaskNode {
   @Override
   public int execute() {
     Logger.info("Inventory is full, dropping logs...");
-    if (!Utility.dropVerticalOrdering("logs")) {
+    if (!Utility.dropVerticalOrdering("logs|clue|nest")) {
       Logger.error("Failed to drop logs, stopping script.");
       return -1;
     }
