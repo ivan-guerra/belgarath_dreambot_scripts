@@ -4,6 +4,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import org.dreambot.api.methods.interactive.Players;
 import org.dreambot.api.script.TaskNode;
+import org.dreambot.api.utilities.Logger;
 import org.dreambot.merlin.common.WalkingUtils;
 import org.dreambot.merlin.woodcutting.Tree;
 
@@ -38,11 +39,14 @@ public class WalkToTreeAreaTask extends TaskNode {
   /**
    * Walks to the area of the specified tree type.
    *
-   * @return 1000 if the walk was successful, -1 if it failed
+   * @return delay in milliseconds before next execution
    */
   @Override
   public int execute() {
+    Logger.info("Walking to " + currTree.get().getName() + " area.");
+
     WalkingUtils.walkToTile(currTree.get().getLocation());
-    return 1000;
+
+    return 3000;
   }
 }
