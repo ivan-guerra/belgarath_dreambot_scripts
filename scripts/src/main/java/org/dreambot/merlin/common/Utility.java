@@ -179,7 +179,8 @@ public class Utility {
       return false;
     }
 
-    Item itemHandle = Inventory.get(item -> item != null && (item.getName().toLowerCase() == itemName.toLowerCase()));
+    Item itemHandle = Inventory
+        .get(item -> item != null && item.getName().toLowerCase().equals(itemName.toLowerCase()));
     if (itemHandle != null && itemHandle.interact()) {
       return Sleep.sleepUntil(() -> Utility.isEquipped(itemName), EQUIP_ITEM_TIMEOUT_MS);
     }
