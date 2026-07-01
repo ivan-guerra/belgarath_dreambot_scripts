@@ -12,15 +12,15 @@ import org.dreambot.merlin.common.Utility;
 import org.dreambot.merlin.woodcutting.Axe;
 
 /**
- * Task node for upgrading the axe based on the player's woodcutting level,
- * attack level, and membership status, hopping worlds if necessary.
+ * Task node for upgrading the axe based on the player's woodcutting level, attack level, and
+ * membership status, hopping worlds if necessary.
  */
 public class UpgradeAxeTask extends TaskNode {
   private final AtomicReference<Axe> axe;
 
   /**
    * Constructs a new UpgradeAxeTask for the specified axe.
-   * 
+   *
    * @param currAxe The current axe to be upgraded.
    */
   public UpgradeAxeTask(AtomicReference<Axe> currAxe) {
@@ -28,9 +28,8 @@ public class UpgradeAxeTask extends TaskNode {
   }
 
   /**
-   * Checks if the player can upgrade to a better axe based on their woodcutting
-   * and attack levels.
-   * 
+   * Checks if the player can upgrade to a better axe based on their woodcutting and attack levels.
+   *
    * @return true if the player can upgrade to a better axe, false otherwise
    */
   @Override
@@ -39,9 +38,9 @@ public class UpgradeAxeTask extends TaskNode {
   }
 
   /**
-   * Upgrades the axe to the best available axe based on the player's woodcutting
-   * and attack levels, hopping worlds if necessary.
-   * 
+   * Upgrades the axe to the best available axe based on the player's woodcutting and attack levels,
+   * hopping worlds if necessary.
+   *
    * @return 1000 if the upgrade was successful, -1 if it failed
    */
   @Override
@@ -62,9 +61,9 @@ public class UpgradeAxeTask extends TaskNode {
   }
 
   /**
-   * Gets the best available axe based on the player's woodcutting and attack
-   * levels, as well as membership status.
-   * 
+   * Gets the best available axe based on the player's woodcutting and attack levels, as well as
+   * membership status.
+   *
    * @return the best available axe
    */
   private Axe getBestAxe() {
@@ -73,7 +72,8 @@ public class UpgradeAxeTask extends TaskNode {
     final boolean hasMembership = Client.getMembershipLeft() > 0;
 
     for (Axe axe : Axe.values()) {
-      if (woodcuttingLevel >= axe.getWoodcutLvlReq() && attackLevel >= axe.getAttackLvlReq()
+      if (woodcuttingLevel >= axe.getWoodcutLvlReq()
+          && attackLevel >= axe.getAttackLvlReq()
           && (!axe.isMembers() || hasMembership)) {
         return axe;
       }

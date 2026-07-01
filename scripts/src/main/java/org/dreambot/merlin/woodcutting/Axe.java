@@ -1,8 +1,6 @@
 package org.dreambot.merlin.woodcutting;
 
-/**
- * Enum representing different types of axes available for woodcutting.
- */
+/** Enum representing different types of axes available for woodcutting. */
 public enum Axe {
   /** Dragon axe, requires level 61 woodcutting and level 60 attack. */
   DRAGON("Dragon axe", 61, 60, true),

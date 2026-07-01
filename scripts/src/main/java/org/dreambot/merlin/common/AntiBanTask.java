@@ -8,9 +8,7 @@ import org.dreambot.api.script.AbstractScript;
 import org.dreambot.api.script.TaskNode;
 import org.dreambot.api.utilities.Logger;
 
-/**
- * AntiBanTask is a task node that simulates anti-ban behavior.
- */
+/** AntiBanTask is a task node that simulates anti-ban behavior. */
 public class AntiBanTask extends TaskNode {
   private final AbstractScript script;
   private volatile long afkEndTime = 0;
@@ -27,8 +25,7 @@ public class AntiBanTask extends TaskNode {
   }
 
   /**
-   * Executes the anti-ban behavior by simulating going AFK for a random period of
-   * time.
+   * Executes the anti-ban behavior by simulating going AFK for a random period of time.
    *
    * @return the sleep time in milliseconds before the next task execution
    */
@@ -69,8 +66,7 @@ public class AntiBanTask extends TaskNode {
   }
 
   /**
-   * Draws an AFK countdown timer if currently AFK. Call from the script's
-   * onPaint.
+   * Draws an AFK countdown timer if currently AFK. Call from the script's onPaint.
    *
    * @param g the graphics context
    */

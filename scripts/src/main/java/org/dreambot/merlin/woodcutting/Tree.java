@@ -2,9 +2,7 @@ package org.dreambot.merlin.woodcutting;
 
 import org.dreambot.api.methods.map.Tile;
 
-/**
- * Enum representing different types of trees available for woodcutting.
- */
+/** Enum representing different types of trees available for woodcutting. */
 public enum Tree {
   /** Lumbridge Castle Normal tree. */
   Normal("Normal tree", 1, new Tile(3196, 3245, 0), false),
@@ -21,14 +19,12 @@ public enum Tree {
   private final boolean isMembers;
 
   /**
-   * Constructs a new Tree enum value with the specified name, level requirement,
-   * and location.
+   * Constructs a new Tree enum value with the specified name, level requirement, and location.
    *
-   * @param name             The name of the tree type.
+   * @param name The name of the tree type.
    * @param levelRequirement The level requirement for cutting this type of tree.
-   * @param location         The location of the tree type.
-   * @param isMembers        Whether the tree type is members-only (P2P) or
-   *                         free-to-play (F2P).
+   * @param location The location of the tree type.
+   * @param isMembers Whether the tree type is members-only (P2P) or free-to-play (F2P).
    */
   Tree(String name, int levelRequirement, Tile location, boolean isMembers) {
     this.name = name;
@@ -67,8 +63,7 @@ public enum Tree {
   /**
    * Returns whether the tree type is members-only (P2P) or free-to-play (F2P).
    *
-   * @return True if the tree type is members-only (P2P), false if it is
-   *         free-to-play (F2P).
+   * @return True if the tree type is members-only (P2P), false if it is free-to-play (F2P).
    */
   public boolean isMembers() {
     return isMembers;

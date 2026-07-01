@@ -10,17 +10,21 @@ import org.dreambot.api.script.listener.PaintListener;
 import org.dreambot.merlin.woodcutting.WoodcuttingScript;
 
 /**
- * Main entry point for Merlin's DreamBot script collection.
- * Delegates execution to the selected {@link MerlinScript} implementation.
+ * Main entry point for Merlin's DreamBot script collection. Delegates execution to the selected
+ * {@link MerlinScript} implementation.
  */
-@ScriptManifest(name = "Merlin's Scripts", author = "Merlin", description = "Merlin's DreamBot script collection.", category = Category.MISC, version = 0.1)
+@ScriptManifest(
+    name = "Merlin's Scripts",
+    author = "Merlin",
+    description = "Merlin's DreamBot script collection.",
+    category = Category.MISC,
+    version = 0.1)
 public class MainEntryPoint extends TaskScript {
   /** The currently selected script to run. */
   private MerlinScript selectedScript;
 
   /** Constructs a new MainEntryPoint instance. */
-  public MainEntryPoint() {
-  }
+  public MainEntryPoint() {}
 
   @Override
   public void onPaint(Graphics2D g) {
@@ -30,8 +34,8 @@ public class MainEntryPoint extends TaskScript {
   }
 
   /**
-   * Initializes the selected script based on the provided parameters.
-   * Defaults to {@link WoodcuttingScript} if no valid parameters are provided.
+   * Initializes the selected script based on the provided parameters. Defaults to {@link
+   * WoodcuttingScript} if no valid parameters are provided.
    */
   @Override
   public void onStart() {
@@ -50,19 +54,16 @@ public class MainEntryPoint extends TaskScript {
 
   @Override
   public void onPause() {
-    if (selectedScript != null)
-      selectedScript.onPause();
+    if (selectedScript != null) selectedScript.onPause();
   }
 
   @Override
   public void onResume() {
-    if (selectedScript != null)
-      selectedScript.onResume();
+    if (selectedScript != null) selectedScript.onResume();
   }
 
   @Override
   public void onExit() {
-    if (selectedScript != null)
-      selectedScript.onExit();
+    if (selectedScript != null) selectedScript.onExit();
   }
 }

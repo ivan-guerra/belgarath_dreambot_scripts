@@ -12,8 +12,8 @@ import org.dreambot.merlin.common.Utility;
 import org.dreambot.merlin.woodcutting.Tree;
 
 /**
- * Task node for upgrading the tree type based on the player's woodcutting
- * level and membership status, hopping worlds if necessary.
+ * Task node for upgrading the tree type based on the player's woodcutting level and membership
+ * status, hopping worlds if necessary.
  */
 public class UpgradeTreeTask extends TaskNode {
   private final AtomicReference<Tree> tree;
@@ -28,8 +28,8 @@ public class UpgradeTreeTask extends TaskNode {
   }
 
   /**
-   * Checks if the player can upgrade to a better tree type based on their
-   * woodcutting level and membership status.
+   * Checks if the player can upgrade to a better tree type based on their woodcutting level and
+   * membership status.
    *
    * @return true if the player can upgrade to a better tree, false otherwise
    */
@@ -39,8 +39,8 @@ public class UpgradeTreeTask extends TaskNode {
   }
 
   /**
-   * Upgrades the tree type to the best available tree based on the player's
-   * woodcutting level and membership status, hopping worlds if necessary.
+   * Upgrades the tree type to the best available tree based on the player's woodcutting level and
+   * membership status, hopping worlds if necessary.
    *
    * @return 1000 if the upgrade was successful, -1 if it failed
    */
@@ -62,8 +62,8 @@ public class UpgradeTreeTask extends TaskNode {
   }
 
   /**
-   * Returns the highest-level tree available to the player based on their
-   * woodcutting level and account membership status.
+   * Returns the highest-level tree available to the player based on their woodcutting level and
+   * account membership status.
    *
    * @return The best available {@link Tree} for the player.
    */

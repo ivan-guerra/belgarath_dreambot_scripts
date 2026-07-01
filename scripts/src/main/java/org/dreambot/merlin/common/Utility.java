@@ -37,16 +37,17 @@ public class Utility {
   }
 
   /**
-   * Drops all items in the inventory whose names match the specified regex
-   * pattern, using vertical ordering.
+   * Drops all items in the inventory whose names match the specified regex pattern, using vertical
+   * ordering.
    *
-   * @param regex The regex pattern to match item names against
-   *              (case-insensitive).
+   * @param regex The regex pattern to match item names against (case-insensitive).
    * @return true if the items were successfully dropped, false otherwise.
    */
   public static boolean dropVerticalOrdering(String regex) {
-    int[] ordered_slots = { 0, 4, 8, 12, 16, 20, 24, 1, 5, 9, 13, 17, 21, 25, 2, 6, 10, 14, 18, 22, 26,
-        3, 7, 11, 15, 19, 23, 27 };
+    int[] ordered_slots = {
+      0, 4, 8, 12, 16, 20, 24, 1, 5, 9, 13, 17, 21, 25, 2, 6, 10, 14, 18, 22, 26, 3, 7, 11, 15, 19,
+      23, 27
+    };
 
     if (!Utility.openInventoryTab()) {
       Logger.error("Failed to open inventory tab.");
@@ -59,7 +60,8 @@ public class Utility {
       Item item = Inventory.getItemInSlot(slot);
       if (item != null && pattern.matcher(item.getName()).find()) {
         if (item.interact()) {
-          Sleep.sleepUntil(() -> Inventory.getItemInSlot(slot) == null, DROP_TIMEOUT_MS, POLL_DELAY_MS);
+          Sleep.sleepUntil(
+              () -> Inventory.getItemInSlot(slot) == null, DROP_TIMEOUT_MS, POLL_DELAY_MS);
         }
       }
     }
@@ -69,8 +71,7 @@ public class Utility {
   }
 
   /**
-   * Hops to a random world based on the player's membership status (members or
-   * free-to-play).
+   * Hops to a random world based on the player's membership status (members or free-to-play).
    *
    * @return true if the world hop was successful, false otherwise.
    */
@@ -79,8 +80,8 @@ public class Utility {
   }
 
   /**
-   * Hops to a random members (P2P) world that is not a PvP world and has no
-   * minimum level requirement.
+   * Hops to a random members (P2P) world that is not a PvP world and has no minimum level
+   * requirement.
    *
    * @return true if the world hop was successful, false otherwise.
    */
@@ -88,14 +89,15 @@ public class Utility {
     World world = Worlds.getRandomWorld(w -> !w.isF2P() && !w.isPVP() && w.getMinimumLevel() == 0);
     if (world != null) {
       WorldHopper.hopWorld(world);
-      return Sleep.sleepUntil(() -> Client.getGameState() != GameState.HOPPING, WORLD_HOP_TIMEOUT_MS);
+      return Sleep.sleepUntil(
+          () -> Client.getGameState() != GameState.HOPPING, WORLD_HOP_TIMEOUT_MS);
     }
     return false;
   }
 
   /**
-   * Hops to a random free-to-play (F2P) world that is not a PvP world and has no
-   * minimum level requirement.
+   * Hops to a random free-to-play (F2P) world that is not a PvP world and has no minimum level
+   * requirement.
    *
    * @return true if the world hop was successful, false otherwise.
    */
@@ -103,15 +105,15 @@ public class Utility {
     World world = Worlds.getRandomWorld(w -> w.isF2P() && !w.isPVP() && w.getMinimumLevel() == 0);
     if (world != null) {
       WorldHopper.hopWorld(world);
-      return Sleep.sleepUntil(() -> Client.getGameState() != GameState.HOPPING, WORLD_HOP_TIMEOUT_MS);
+      return Sleep.sleepUntil(
+          () -> Client.getGameState() != GameState.HOPPING, WORLD_HOP_TIMEOUT_MS);
     }
     return false;
   }
 
   /**
-   * Checks if another player is currently using the specified game object.
-   * A player is considered to be using the node if they are within 2 tiles of it
-   * and are currently playing an animation.
+   * Checks if another player is currently using the specified game object. A player is considered
+   * to be using the node if they are within 2 tiles of it and are currently playing an animation.
    *
    * @param target The game object to check for other players using it.
    * @return true if another player is using the node, false otherwise.
@@ -148,30 +150,27 @@ public class Utility {
     return Sleep.sleepUntil(() -> Tabs.getOpen() == Tab.INVENTORY, OPEN_TAB_TIMEOUT_MS);
   }
 
-  /**
-   * Closes all open interfaces by pressing the Escape key.
-   */
+  /** Closes all open interfaces by pressing the Escape key. */
   public static void closeAllInterfaces() {
     Keyboard.pressEsc();
   }
 
   /**
-   * Checks if the player has an item equipped that matches the specified item
-   * name.
+   * Checks if the player has an item equipped that matches the specified item name.
    *
    * @param itemName The name of the item to check for (case-insensitive).
    * @return true if the player has the item equipped, false otherwise.
    */
   public static boolean isEquipped(String itemName) {
-    return Equipment.contains(item -> item != null && item.getName().toLowerCase().contains(itemName.toLowerCase()));
+    return Equipment.contains(
+        item -> item != null && item.getName().toLowerCase().contains(itemName.toLowerCase()));
   }
 
   /**
    * Equips an item from the inventory if it is not already equipped.
    *
    * @param itemName The name of the item to equip (case-insensitive).
-   * @return true if the item is equipped or was successfully equipped, false
-   *         otherwise.
+   * @return true if the item is equipped or was successfully equipped, false otherwise.
    */
   public static boolean equipItem(String itemName) {
     // Open the inventory tab to access the item to equip
@@ -180,8 +179,9 @@ public class Utility {
       return false;
     }
 
-    Item itemHandle = Inventory
-        .get(item -> item != null && item.getName().toLowerCase().equals(itemName.toLowerCase()));
+    Item itemHandle =
+        Inventory.get(
+            item -> item != null && item.getName().toLowerCase().equals(itemName.toLowerCase()));
     if (itemHandle != null && itemHandle.interact()) {
       return Sleep.sleepUntil(() -> Utility.isEquipped(itemName), EQUIP_ITEM_TIMEOUT_MS);
     }
@@ -189,19 +189,18 @@ public class Utility {
   }
 
   /**
-   * Checks if the player has an item in their inventory that matches the
-   * specified item name.
+   * Checks if the player has an item in their inventory that matches the specified item name.
    *
    * @param itemName The name of the item to check for (case-insensitive).
    * @return true if the player has the item in their inventory, false otherwise.
    */
   public static boolean isInInventory(String itemName) {
-    return Inventory.contains(item -> item != null && item.getName().toLowerCase().contains(itemName.toLowerCase()));
+    return Inventory.contains(
+        item -> item != null && item.getName().toLowerCase().contains(itemName.toLowerCase()));
   }
 
   /**
-   * Withdraws an item from the bank if it is available, depositing all other
-   * items first.
+   * Withdraws an item from the bank if it is available, depositing all other items first.
    *
    * @param itemName The name of the item to withdraw (case-insensitive).
    * @return true if the item was successfully withdrawn, false otherwise.
@@ -212,7 +211,8 @@ public class Utility {
       return false;
     }
 
-    if (!Bank.depositAllItems() || !Sleep.sleepUntil(() -> Inventory.isEmpty(), DEPOSIT_TIMEOUT_MS)) {
+    if (!Bank.depositAllItems()
+        || !Sleep.sleepUntil(() -> Inventory.isEmpty(), DEPOSIT_TIMEOUT_MS)) {
       Logger.error("Failed to deposit all items in bank.");
       return false;
     }
@@ -228,8 +228,7 @@ public class Utility {
   /**
    * Closes the bank interface if it is currently open.
    *
-   * @return true if the bank was successfully closed or was already closed,
-   *         false otherwise.
+   * @return true if the bank was successfully closed or was already closed, false otherwise.
    */
   public static boolean closeBank() {
     if (Bank.isOpen()) {

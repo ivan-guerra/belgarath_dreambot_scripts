@@ -5,17 +5,14 @@ import org.dreambot.api.methods.map.Tile;
 import org.dreambot.api.methods.walking.impl.Walking;
 import org.dreambot.api.utilities.Logger;
 
-/**
- * Utility class for managing walking behavior.
- */
+/** Utility class for managing walking behavior. */
 public class WalkingUtils {
   private static int tilesBeforeWeWalkAgain = Calculations.random(2, 8);
   private static int currentWalkCooldown = 0;
   private static long currentTime = 0;
 
   /**
-   * Walks to the specified tile if the cooldown has expired and the player is
-   * allowed to walk.
+   * Walks to the specified tile if the cooldown has expired and the player is allowed to walk.
    *
    * @param tile The target tile to walk to.
    */

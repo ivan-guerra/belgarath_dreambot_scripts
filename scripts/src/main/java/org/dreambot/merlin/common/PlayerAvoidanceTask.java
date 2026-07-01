@@ -16,8 +16,7 @@ public class PlayerAvoidanceTask<T> extends TaskNode {
   private AtomicReference<T> resource;
 
   /**
-   * Constructs a new PlayerAvoidanceTask with the given AtomicReference to the
-   * resource to avoid.
+   * Constructs a new PlayerAvoidanceTask with the given AtomicReference to the resource to avoid.
    *
    * @param resource an AtomicReference to the resource to avoid
    */

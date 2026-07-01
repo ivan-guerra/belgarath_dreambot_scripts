@@ -16,9 +16,7 @@ import org.dreambot.merlin.woodcutting.nodes.UpgradeAxeTask;
 import org.dreambot.merlin.woodcutting.nodes.UpgradeTreeTask;
 import org.dreambot.merlin.woodcutting.nodes.WalkToTreeAreaTask;
 
-/**
- * Main script class for the woodcutting bot.
- */
+/** Main script class for the woodcutting bot. */
 public class WoodcuttingScript extends MerlinScript implements PaintListener {
   private final AntiBanTask antiBan;
   private AtomicReference<Tree> currTree = new AtomicReference<>(Tree.Normal);
@@ -41,11 +39,15 @@ public class WoodcuttingScript extends MerlinScript implements PaintListener {
 
   @Override
   public TaskNode[] getNodes() {
-    return new TaskNode[] { this.antiBan, new UpgradeTreeTask(currTree), new UpgradeAxeTask(currAxe),
-        new EquipAxeTask(currAxe),
-        new WalkToTreeAreaTask(currTree),
-        new DropLogsTask(),
-        new PlayerAvoidanceTask<Tree>(currTree),
-        new ChopTreeTask(currTree) };
+    return new TaskNode[] {
+      this.antiBan,
+      new UpgradeTreeTask(currTree),
+      new UpgradeAxeTask(currAxe),
+      new EquipAxeTask(currAxe),
+      new WalkToTreeAreaTask(currTree),
+      new DropLogsTask(),
+      new PlayerAvoidanceTask<Tree>(currTree),
+      new ChopTreeTask(currTree)
+    };
   }
 }

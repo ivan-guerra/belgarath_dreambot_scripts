@@ -13,17 +13,14 @@ import org.dreambot.merlin.common.Utility;
 import org.dreambot.merlin.common.WalkingUtils;
 import org.dreambot.merlin.woodcutting.Axe;
 
-/**
- * Task node for equipping an axe in the game.
- */
+/** Task node for equipping an axe in the game. */
 public class EquipAxeTask extends TaskNode {
   private final AtomicReference<Axe> currAxe;
   private boolean buyingFromGE = false;
   private int axeBuyPrice = 0;
 
   /**
-   * Constructs a new EquipAxeTask with the given AtomicReference to the current
-   * axe.
+   * Constructs a new EquipAxeTask with the given AtomicReference to the current axe.
    *
    * @param currAxe an AtomicReference to the current axe being used
    */
@@ -42,9 +39,8 @@ public class EquipAxeTask extends TaskNode {
   }
 
   /**
-   * Equips the current axe if it is in the player's inventory, or withdraws it
-   * from the bank if not. As a last resort, walks to the Grand Exchange and buys
-   * the axe.
+   * Equips the current axe if it is in the player's inventory, or withdraws it from the bank if
+   * not. As a last resort, walks to the Grand Exchange and buys the axe.
    *
    * @return delay in milliseconds before next execution, or -1 on failure
    */
@@ -86,8 +82,8 @@ public class EquipAxeTask extends TaskNode {
   }
 
   /**
-   * Buys the specified axe from the Grand Exchange if it is not already in the
-   * player's inventory or bank.
+   * Buys the specified axe from the Grand Exchange if it is not already in the player's inventory
+   * or bank.
    *
    * @param axeName the name of the axe to buy
    * @return delay in milliseconds before next execution, or -1 on failure

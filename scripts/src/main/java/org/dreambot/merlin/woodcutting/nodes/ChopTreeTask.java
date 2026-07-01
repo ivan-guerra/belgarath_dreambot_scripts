@@ -11,9 +11,7 @@ import org.dreambot.api.utilities.Sleep;
 import org.dreambot.api.wrappers.interactive.GameObject;
 import org.dreambot.merlin.woodcutting.Tree;
 
-/**
- * Task node for chopping a specific type of tree in the game.
- */
+/** Task node for chopping a specific type of tree in the game. */
 public class ChopTreeTask extends TaskNode {
   private final AtomicReference<Tree> currTree;
 
@@ -29,8 +27,7 @@ public class ChopTreeTask extends TaskNode {
   /**
    * Checks if the player can chop the specified tree.
    *
-   * @return true if the inventory is not full and the tree is present, false
-   *         otherwise
+   * @return true if the inventory is not full and the tree is present, false otherwise
    */
   @Override
   public boolean accept() {
@@ -50,7 +47,10 @@ public class ChopTreeTask extends TaskNode {
 
     Logger.info("Chopping " + currTree.get().getName() + " at tile " + tree.getTile() + ".");
     tree.interact("Chop down");
-    Sleep.sleepUntil(() -> !tree.exists() || Inventory.isFull(), () -> Players.getLocal().isAnimating(), chopTimeoutMs,
+    Sleep.sleepUntil(
+        () -> !tree.exists() || Inventory.isFull(),
+        () -> Players.getLocal().isAnimating(),
+        chopTimeoutMs,
         pollDelayMs);
 
     return 1000;

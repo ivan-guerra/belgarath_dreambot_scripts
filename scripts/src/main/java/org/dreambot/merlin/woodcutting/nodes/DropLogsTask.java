@@ -5,9 +5,7 @@ import org.dreambot.api.script.TaskNode;
 import org.dreambot.api.utilities.Logger;
 import org.dreambot.merlin.common.Utility;
 
-/**
- * Task node for dropping logs from the player's inventory when it is full.
- */
+/** Task node for dropping logs from the player's inventory when it is full. */
 public class DropLogsTask extends TaskNode {
   /**
    * Checks if the player's inventory is full and needs to drop logs.

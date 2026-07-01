@@ -8,9 +8,7 @@ import org.dreambot.api.utilities.Logger;
 import org.dreambot.merlin.common.WalkingUtils;
 import org.dreambot.merlin.woodcutting.Tree;
 
-/**
- * Task node for walking to the area of a specific type of tree in the game.
- */
+/** Task node for walking to the area of a specific type of tree in the game. */
 public class WalkToTreeAreaTask extends TaskNode {
   private static final int MAX_TREE_DIST = 7;
   private final AtomicReference<Tree> currTree;
@@ -31,7 +29,8 @@ public class WalkToTreeAreaTask extends TaskNode {
    */
   @Override
   public boolean accept() {
-    final boolean isInTreeArea = Players.getLocal().distance(currTree.get().getLocation()) <= MAX_TREE_DIST;
+    final boolean isInTreeArea =
+        Players.getLocal().distance(currTree.get().getLocation()) <= MAX_TREE_DIST;
 
     return !isInTreeArea;
   }
