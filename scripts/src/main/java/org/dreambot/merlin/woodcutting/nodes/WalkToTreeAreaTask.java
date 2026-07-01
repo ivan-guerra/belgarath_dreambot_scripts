@@ -47,6 +47,6 @@ public class WalkToTreeAreaTask extends TaskNode {
 
     WalkingUtils.walkToTile(currTree.get().getLocation());
 
-    return 3000;
+    return 2000;
   }
 }
