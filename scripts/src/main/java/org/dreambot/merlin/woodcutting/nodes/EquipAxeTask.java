@@ -5,6 +5,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import org.dreambot.api.methods.container.impl.bank.Bank;
 import org.dreambot.api.methods.container.impl.bank.BankLocation;
 import org.dreambot.api.methods.grandexchange.GrandExchange;
+import org.dreambot.api.methods.grandexchange.LivePrices;
 import org.dreambot.api.script.TaskNode;
 import org.dreambot.api.utilities.Logger;
 import org.dreambot.api.utilities.Sleep;
@@ -18,8 +19,7 @@ import org.dreambot.merlin.woodcutting.Axe;
 public class EquipAxeTask extends TaskNode {
   private final AtomicReference<Axe> currAxe;
   private boolean buyingFromGE = false;
-
-  private static final int GE_BUY_PRICE = 1000;
+  private int axeBuyPrice = 0;
 
   /**
    * Constructs a new EquipAxeTask with the given AtomicReference to the current
@@ -103,8 +103,9 @@ public class EquipAxeTask extends TaskNode {
         GrandExchange.close();
         Sleep.sleepUntil(() -> !GrandExchange.isOpen(), 5000);
       } else if (GrandExchange.getOpenSlots() > 0) {
-        Logger.info("Buying " + axeName + " from Grand Exchange.");
-        if (!GrandExchange.buyItem(axeName, 1, GE_BUY_PRICE)) {
+        axeBuyPrice = LivePrices.getHigh(axeName);
+        Logger.info("Buying " + axeName + " from Grand Exchange for " + axeBuyPrice + " coins.");
+        if (!GrandExchange.buyItem(axeName, 1, axeBuyPrice)) {
           Logger.error("Failed to buy " + axeName + " from Grand Exchange.");
           return -1;
         }
