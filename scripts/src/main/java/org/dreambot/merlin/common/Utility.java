@@ -218,14 +218,23 @@ public class Utility {
 
     if (Bank.contains(itemName)) {
       if (Bank.withdraw(itemName, 1)) {
-        boolean withdrawn = Sleep.sleepUntil(() -> Inventory.contains(itemName), WITHDRAW_TIMEOUT_MS);
-        if (!Bank.close() || !Sleep.sleepUntil(() -> !Bank.isOpen(), BANK_CLOSE_TIMEOUT_MS)) {
-          Logger.error("Failed to close bank after withdrawal attempt.");
-          return false;
-        }
-        return withdrawn;
+        return Sleep.sleepUntil(() -> Inventory.contains(itemName), WITHDRAW_TIMEOUT_MS);
       }
     }
     return false;
+  }
+
+  /**
+   * Closes the bank interface if it is currently open.
+   *
+   * @return true if the bank was successfully closed or was already closed,
+   *         false otherwise.
+   */
+  public static boolean closeBank() {
+    if (Bank.isOpen()) {
+      Bank.close();
+      return Sleep.sleepUntil(() -> !Bank.isOpen(), BANK_CLOSE_TIMEOUT_MS);
+    }
+    return true; // Bank is already closed
   }
 }

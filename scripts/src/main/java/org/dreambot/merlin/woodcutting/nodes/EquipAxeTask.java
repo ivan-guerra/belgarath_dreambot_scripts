@@ -53,7 +53,6 @@ public class EquipAxeTask extends TaskNode {
     final String axeName = currAxe.get().getName();
 
     if (Utility.isInInventory(axeName)) {
-      buyingFromGE = false;
       Logger.info(axeName + " found in inventory. Attempting to equip.");
       if (Utility.equipItem(axeName)) {
         Logger.info("Equipped " + axeName + ".");
@@ -71,9 +70,10 @@ public class EquipAxeTask extends TaskNode {
     if (Bank.open()) {
       if (Utility.withdrawItemFromBank(axeName)) {
         Logger.info("Withdrew " + axeName + " from bank.");
+        Utility.closeBank();
       } else {
-        Logger.warn(axeName + " not found in bank. Falling back to Grand Exchange.");
-        Bank.close();
+        Logger.info(axeName + " not found in bank. Falling back to Grand Exchange.");
+        Utility.closeBank();
         buyingFromGE = true;
         return buyFromGrandExchange(axeName);
       }
@@ -99,6 +99,7 @@ public class EquipAxeTask extends TaskNode {
         Sleep.sleepUntil(() -> !GrandExchange.isReadyToCollect(), 5000);
 
         Logger.info("Collected items from Grand Exchange.");
+        buyingFromGE = false;
 
         GrandExchange.close();
         Sleep.sleepUntil(() -> !GrandExchange.isOpen(), 5000);
