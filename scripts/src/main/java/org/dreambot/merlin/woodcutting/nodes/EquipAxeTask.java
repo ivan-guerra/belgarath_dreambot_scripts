@@ -3,9 +3,13 @@ package org.dreambot.merlin.woodcutting.nodes;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.dreambot.api.methods.container.impl.bank.Bank;
+import org.dreambot.api.methods.container.impl.bank.BankLocation;
+import org.dreambot.api.methods.grandexchange.GrandExchange;
 import org.dreambot.api.script.TaskNode;
 import org.dreambot.api.utilities.Logger;
+import org.dreambot.api.utilities.Sleep;
 import org.dreambot.merlin.common.Utility;
+import org.dreambot.merlin.common.WalkingUtils;
 import org.dreambot.merlin.woodcutting.Axe;
 
 /**
@@ -13,6 +17,9 @@ import org.dreambot.merlin.woodcutting.Axe;
  */
 public class EquipAxeTask extends TaskNode {
   private final AtomicReference<Axe> currAxe;
+  private boolean buyingFromGE = false;
+
+  private static final int GE_BUY_PRICE = 1000;
 
   /**
    * Constructs a new EquipAxeTask with the given AtomicReference to the current
@@ -36,29 +43,80 @@ public class EquipAxeTask extends TaskNode {
 
   /**
    * Equips the current axe if it is in the player's inventory, or withdraws it
-   * from the bank if it is not.
+   * from the bank if not. As a last resort, walks to the Grand Exchange and buys
+   * the axe.
    *
-   * @return 1000 if the task was successful, -1 if it failed
+   * @return delay in milliseconds before next execution, or -1 on failure
    */
   @Override
   public int execute() {
     final String axeName = currAxe.get().getName();
 
     if (Utility.isInInventory(axeName)) {
+      buyingFromGE = false;
+      Logger.info(axeName + " found in inventory. Attempting to equip.");
       if (Utility.equipItem(axeName)) {
         Logger.info("Equipped " + axeName + ".");
       } else {
         Logger.error("Failed to equip " + axeName + ".");
         return -1;
       }
-    } else if (Bank.open()) {
+      return 3000;
+    }
+
+    if (buyingFromGE) {
+      return buyFromGrandExchange(axeName);
+    }
+
+    if (Bank.open()) {
       if (Utility.withdrawItemFromBank(axeName)) {
         Logger.info("Withdrew " + axeName + " from bank.");
       } else {
-        Logger.error("Failed to withdraw " + axeName + " from bank.");
+        Logger.warn(axeName + " not found in bank. Falling back to Grand Exchange.");
+        Bank.close();
+        buyingFromGE = true;
+        return buyFromGrandExchange(axeName);
+      }
+    } else {
+      buyingFromGE = true;
+      return buyFromGrandExchange(axeName);
+    }
+
+    return 3000;
+  }
+
+  /**
+   * Buys the specified axe from the Grand Exchange if it is not already in the
+   * player's inventory or bank.
+   *
+   * @param axeName the name of the axe to buy
+   * @return delay in milliseconds before next execution, or -1 on failure
+   */
+  private int buyFromGrandExchange(String axeName) {
+    if (GrandExchange.isOpen()) {
+      if (GrandExchange.isReadyToCollect()) {
+        GrandExchange.collectToBank();
+        Sleep.sleepUntil(() -> !GrandExchange.isReadyToCollect(), 5000);
+
+        Logger.info("Collected items from Grand Exchange.");
+
+        GrandExchange.close();
+        Sleep.sleepUntil(() -> !GrandExchange.isOpen(), 5000);
+      } else if (GrandExchange.getOpenSlots() > 0) {
+        Logger.info("Buying " + axeName + " from Grand Exchange.");
+        if (!GrandExchange.buyItem(axeName, 1, GE_BUY_PRICE)) {
+          Logger.error("Failed to buy " + axeName + " from Grand Exchange.");
+          return -1;
+        }
+      } else {
+        Logger.error("No open Grand Exchange slots available.");
         return -1;
       }
+    } else {
+      WalkingUtils.walkToTile(BankLocation.GRAND_EXCHANGE.getTile());
+      GrandExchange.open();
     }
-    return 1000;
+
+    return 3000;
   }
 }
