@@ -61,21 +61,20 @@ public class UpgradeAxeTask extends TaskNode {
   }
 
   /**
-   * Gets the best available axe based on the player's woodcutting and attack levels, as well as
-   * membership status.
+   * Determines the best available axe based on the player's woodcutting level and membership
+   * status.
    *
    * @return the best available axe
    */
   private Axe getBestAxe() {
     final int woodcuttingLevel = Skills.getRealLevel(Skill.WOODCUTTING);
-    final int attackLevel = Skills.getRealLevel(Skill.ATTACK);
     final boolean hasMembership = Client.getMembershipLeft() > 0;
     Axe best = axe.get();
 
     for (Axe axe : Axe.values()) {
-      if (woodcuttingLevel >= axe.getWoodcutLvlReq()
-          && attackLevel >= axe.getAttackLvlReq()
-          && (!axe.isMembers() || hasMembership)) {
+      // We don't factor in the attack level because a player can still use the axe to chop trees
+      // without wielding it.
+      if (woodcuttingLevel >= axe.getWoodcutLvlReq() && (!axe.isMembers() || hasMembership)) {
         best = axe;
       }
     }

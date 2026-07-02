@@ -200,7 +200,7 @@ public class Utility {
   }
 
   /**
-   * Withdraws an item from the bank if it is available, depositing all other items first.
+   * Withdraws an item from the bank if it is available and the bank is open.
    *
    * @param itemName The name of the item to withdraw (case-insensitive).
    * @return true if the item was successfully withdrawn, false otherwise.
@@ -211,16 +211,27 @@ public class Utility {
       return false;
     }
 
-    if (!Bank.depositAllItems()
-        || !Sleep.sleepUntil(() -> Inventory.isEmpty(), DEPOSIT_TIMEOUT_MS)) {
-      Logger.error("Failed to deposit all items in bank.");
-      return false;
-    }
-
     if (Bank.contains(itemName)) {
       if (Bank.withdraw(itemName, 1)) {
         return Sleep.sleepUntil(() -> Inventory.contains(itemName), WITHDRAW_TIMEOUT_MS);
       }
+    }
+    return false;
+  }
+
+  /**
+   * Deposits all items in the player's inventory into the bank.
+   *
+   * @return true if all items were successfully deposited, false otherwise.
+   */
+  public static boolean depositAllItemsInBank() {
+    if (!Bank.isOpen()) {
+      Logger.error("Called depositAllItemsInBank() but bank is not open.");
+      return false;
+    }
+
+    if (Bank.depositAllItems()) {
+      return Sleep.sleepUntil(() -> Inventory.isEmpty(), DEPOSIT_TIMEOUT_MS);
     }
     return false;
   }
