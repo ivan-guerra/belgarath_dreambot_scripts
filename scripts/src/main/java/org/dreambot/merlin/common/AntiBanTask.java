@@ -20,7 +20,7 @@ public class AntiBanTask extends TaskNode {
    */
   @Override
   public boolean accept() {
-    return Calculations.random(0, 100) < 2; // 2% chance to go AFK
+    return Calculations.random(0, 100) < 1; // 1% chance to go AFK
   }
 
   /**
