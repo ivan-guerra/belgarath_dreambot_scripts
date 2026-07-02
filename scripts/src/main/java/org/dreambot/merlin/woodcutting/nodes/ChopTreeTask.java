@@ -53,6 +53,10 @@ public class ChopTreeTask extends TaskNode {
         chopTimeoutMs,
         pollDelayMs);
 
+    // Add additional 1-3 second delay when swapping trees so the bot isn't overly snappy and more
+    // human-like.
+    Sleep.sleep(1000, 3000);
+
     return 1000;
   }
 }
