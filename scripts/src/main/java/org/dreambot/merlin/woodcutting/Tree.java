@@ -5,7 +5,7 @@ import org.dreambot.api.methods.map.Tile;
 /** Enum representing different types of trees available for woodcutting. */
 public enum Tree {
   /** Lumbridge Castle Normal tree. */
-  Normal("Normal tree", 1, new Tile(3196, 3245, 0), false),
+  Normal("Tree", 1, new Tile(3196, 3245, 0), false),
   /** Lumbridge Castle Oak tree. */
   Oak("Oak tree", 15, new Tile(3204, 3245, 0), false),
   /** Port Sarim Willow tree. */
