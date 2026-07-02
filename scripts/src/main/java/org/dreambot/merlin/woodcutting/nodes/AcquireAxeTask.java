@@ -7,7 +7,9 @@ import org.dreambot.api.methods.container.impl.bank.BankLocation;
 import org.dreambot.api.methods.container.impl.equipment.Equipment;
 import org.dreambot.api.methods.container.impl.equipment.EquipmentSlot;
 import org.dreambot.api.methods.grandexchange.GrandExchange;
+import org.dreambot.api.methods.grandexchange.GrandExchangeItem;
 import org.dreambot.api.methods.grandexchange.LivePrices;
+import org.dreambot.api.methods.grandexchange.Status;
 import org.dreambot.api.script.TaskNode;
 import org.dreambot.api.utilities.Logger;
 import org.dreambot.api.utilities.Sleep;
@@ -129,10 +131,10 @@ public class AcquireAxeTask extends TaskNode {
       } else if (GrandExchange.getOpenSlots() > 0) {
         final int axeBuyPrice = LivePrices.getHigh(axeName);
         final boolean bidPlaced = GrandExchange.buyItem(axeName, 1, axeBuyPrice);
-        final boolean itemBought = Sleep.sleepUntil(() -> GrandExchange.contains(axeName), 10_000);
+        final boolean axeBought = Sleep.sleepUntil(() -> hasAxeBought(axeName), 10_000);
 
         Logger.info("Buying " + axeName + " from Grand Exchange for " + axeBuyPrice + " coins.");
-        if (bidPlaced && itemBought) {
+        if (bidPlaced && axeBought) {
           Logger.info("Successfully bought " + axeName + " from Grand Exchange.");
         } else {
           Logger.error("Failed to buy " + axeName + " from Grand Exchange.");
@@ -147,6 +149,21 @@ public class AcquireAxeTask extends TaskNode {
       WalkingUtils.walkToTile(BankLocation.GRAND_EXCHANGE.getTile());
     }
     return 3000;
+  }
+
+  /**
+   * Checks if the specified axe has been bought from the Grand Exchange.
+   *
+   * @param axeName the name of the axe to check
+   * @return true if the axe has been bought, false otherwise
+   */
+  private boolean hasAxeBought(String axeName) {
+    for (GrandExchangeItem item : GrandExchange.getItems()) {
+      if (item.getName().equals(axeName) && (item.getStatus() == Status.BUY_COLLECT)) {
+        return true;
+      }
+    }
+    return false;
   }
 
   /**
