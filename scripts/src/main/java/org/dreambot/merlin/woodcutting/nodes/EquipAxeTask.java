@@ -17,7 +17,6 @@ import org.dreambot.merlin.woodcutting.Axe;
 public class EquipAxeTask extends TaskNode {
   private final AtomicReference<Axe> currAxe;
   private boolean buyingFromGE = false;
-  private int axeBuyPrice = 0;
 
   /**
    * Constructs a new EquipAxeTask with the given AtomicReference to the current axe.
@@ -100,7 +99,8 @@ public class EquipAxeTask extends TaskNode {
         GrandExchange.close();
         Sleep.sleepUntil(() -> !GrandExchange.isOpen(), 5000);
       } else if (GrandExchange.getOpenSlots() > 0) {
-        axeBuyPrice = LivePrices.getHigh(axeName);
+        final int axeBuyPrice = LivePrices.getHigh(axeName);
+
         Logger.info("Buying " + axeName + " from Grand Exchange for " + axeBuyPrice + " coins.");
         if (!GrandExchange.buyItem(axeName, 1, axeBuyPrice)) {
           Logger.error("Failed to buy " + axeName + " from Grand Exchange.");
@@ -114,7 +114,6 @@ public class EquipAxeTask extends TaskNode {
       WalkingUtils.walkToTile(BankLocation.GRAND_EXCHANGE.getTile());
       GrandExchange.open();
     }
-
     return 3000;
   }
 }

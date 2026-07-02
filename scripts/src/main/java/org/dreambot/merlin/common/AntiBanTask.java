@@ -20,8 +20,7 @@ public class AntiBanTask extends TaskNode {
    */
   @Override
   public boolean accept() {
-    final int roll = Calculations.random(0, 100);
-    return roll < 2; // 2% chance to go AFK
+    return Calculations.random(0, 100) < 2; // 2% chance to go AFK
   }
 
   /**
@@ -31,8 +30,8 @@ public class AntiBanTask extends TaskNode {
    */
   @Override
   public int execute() {
-    final int min_afk_min = 1; // Minimum AFK time in minutes
-    final int max_afk_min = 3; // Maximum AFK time in minutes
+    final int min_afk_min = 1;
+    final int max_afk_min = 2;
 
     goAfk(min_afk_min, max_afk_min);
 
@@ -72,6 +71,7 @@ public class AntiBanTask extends TaskNode {
    */
   public void onPaint(Graphics2D g) {
     long remaining_msec = afkEndTime - System.currentTimeMillis();
+
     if (remaining_msec > 0) {
       long secs = remaining_msec / 1000;
       g.setFont(g.getFont().deriveFont(22f));

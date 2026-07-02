@@ -43,7 +43,7 @@ public class ChopTreeTask extends TaskNode {
   public int execute() {
     final long chopTimeoutMs = 3000;
     final long pollDelayMs = 100;
-    GameObject tree = GameObjects.closest(currTree.get().getName());
+    final GameObject tree = GameObjects.closest(currTree.get().getName());
 
     Logger.info("Chopping " + currTree.get().getName() + " at tile " + tree.getTile() + ".");
     tree.interact("Chop down");

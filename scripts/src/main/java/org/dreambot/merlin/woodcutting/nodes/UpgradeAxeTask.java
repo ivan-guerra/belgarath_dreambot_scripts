@@ -70,14 +70,15 @@ public class UpgradeAxeTask extends TaskNode {
     final int woodcuttingLevel = Skills.getRealLevel(Skill.WOODCUTTING);
     final int attackLevel = Skills.getRealLevel(Skill.ATTACK);
     final boolean hasMembership = Client.getMembershipLeft() > 0;
+    Axe best = axe.get();
 
     for (Axe axe : Axe.values()) {
       if (woodcuttingLevel >= axe.getWoodcutLvlReq()
           && attackLevel >= axe.getAttackLvlReq()
           && (!axe.isMembers() || hasMembership)) {
-        return axe;
+        best = axe;
       }
     }
-    return Axe.BRONZE;
+    return best;
   }
 }
