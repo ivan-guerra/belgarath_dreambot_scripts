@@ -7,6 +7,17 @@ import org.dreambot.merlin.common.Utility;
 
 /** Task node for dropping logs from the player's inventory when it is full. */
 public class DropLogsTask extends TaskNode {
+  private final String droppedItemsRegex;
+
+  /**
+   * Constructs a new DropLogsTask with the specified regex pattern for dropped items.
+   *
+   * @param droppedItemsRegex the regex pattern for items that should be dropped
+   */
+  public DropLogsTask(String droppedItemsRegex) {
+    this.droppedItemsRegex = droppedItemsRegex;
+  }
+
   /**
    * Checks if the player's inventory is full and needs to drop logs.
    *
@@ -25,7 +36,7 @@ public class DropLogsTask extends TaskNode {
   @Override
   public int execute() {
     Logger.info("Inventory is full, dropping logs...");
-    if (!Utility.dropVerticalOrdering("logs|clue|nest")) {
+    if (!Utility.dropVerticalOrdering(droppedItemsRegex)) {
       Logger.error("Failed to drop logs, stopping script.");
       return -1;
     }

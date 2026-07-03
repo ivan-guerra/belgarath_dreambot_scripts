@@ -8,6 +8,7 @@ import org.dreambot.api.script.TaskNode;
 import org.dreambot.api.script.listener.PaintListener;
 import org.dreambot.merlin.MerlinScript;
 import org.dreambot.merlin.common.AntiBanTask;
+import org.dreambot.merlin.common.BankMiscItemsTask;
 import org.dreambot.merlin.common.PlayerAvoidanceTask;
 import org.dreambot.merlin.woodcutting.nodes.AcquireAxeTask;
 import org.dreambot.merlin.woodcutting.nodes.ChopTreeTask;
@@ -20,6 +21,7 @@ import org.dreambot.merlin.woodcutting.nodes.WalkToTreeAreaTask;
 /** Main script class for the woodcutting bot. */
 public class WoodcuttingScript extends MerlinScript implements PaintListener {
   private final AntiBanTask antiBan;
+  private final String droppedItemsRegex = "logs|clue|nest";
   private AtomicReference<Tree> currTree = new AtomicReference<>(Tree.Normal);
   private AtomicReference<Axe> currAxe = new AtomicReference<>(Axe.BRONZE);
 
@@ -44,10 +46,11 @@ public class WoodcuttingScript extends MerlinScript implements PaintListener {
       this.antiBan,
       new UpgradeTreeTask(currTree),
       new UpgradeAxeTask(currAxe),
+      new BankMiscItemsTask(String.join("|", currTree.get().getName(), droppedItemsRegex)),
       new AcquireAxeTask(currAxe),
       new EquipAxeTask(currAxe),
       new WalkToTreeAreaTask(currTree),
-      new DropLogsTask(),
+      new DropLogsTask(droppedItemsRegex),
       new PlayerAvoidanceTask<Tree>(currTree),
       new ChopTreeTask(currTree)
     };
