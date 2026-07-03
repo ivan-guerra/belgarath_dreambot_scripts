@@ -47,17 +47,15 @@ public class BankMiscItemsTask extends TaskNode {
   @Override
   public int execute() {
     if (Bank.open()) {
+      Logger.info("Depositing all items except those matching regex: " + expectedItemRegex);
       if (Bank.depositAllExcept(
           item ->
               item != null
                   && Pattern.compile(expectedItemRegex, Pattern.CASE_INSENSITIVE)
                       .matcher(item.getName())
                       .find())) {
-
-        Logger.info("Deposited all items except those matching: " + expectedItemRegex);
-
         Bank.close();
-        Sleep.sleepUntil(() -> !Bank.isOpen(), 2000);
+        Sleep.sleepUntil(() -> !Bank.isOpen(), 3000);
       } else {
         Logger.error("Failed to deposit items.");
         return -1;

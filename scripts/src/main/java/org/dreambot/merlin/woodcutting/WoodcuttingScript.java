@@ -21,7 +21,7 @@ import org.dreambot.merlin.woodcutting.nodes.WalkToTreeAreaTask;
 /** Main script class for the woodcutting bot. */
 public class WoodcuttingScript extends MerlinScript implements PaintListener {
   private final AntiBanTask antiBan;
-  private final String droppedItemsRegex = "logs|clue|nest";
+  private final String nonMiscItemRegex = "axe|logs|clue|nest";
   private AtomicReference<Tree> currTree = new AtomicReference<>(Tree.Normal);
   private AtomicReference<Axe> currAxe = new AtomicReference<>(Axe.BRONZE);
 
@@ -46,11 +46,11 @@ public class WoodcuttingScript extends MerlinScript implements PaintListener {
       this.antiBan,
       new UpgradeTreeTask(currTree),
       new UpgradeAxeTask(currAxe),
-      new BankMiscItemsTask(String.join("|", currTree.get().getName(), droppedItemsRegex)),
+      new BankMiscItemsTask(nonMiscItemRegex),
       new AcquireAxeTask(currAxe),
       new EquipAxeTask(currAxe),
       new WalkToTreeAreaTask(currTree),
-      new DropLogsTask(droppedItemsRegex),
+      new DropLogsTask(),
       new PlayerAvoidanceTask<Tree>(currTree),
       new ChopTreeTask(currTree)
     };
