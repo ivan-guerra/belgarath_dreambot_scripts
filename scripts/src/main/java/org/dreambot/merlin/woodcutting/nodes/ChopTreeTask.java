@@ -2,6 +2,7 @@ package org.dreambot.merlin.woodcutting.nodes;
 
 import java.util.concurrent.atomic.AtomicReference;
 
+import org.dreambot.api.methods.Calculations;
 import org.dreambot.api.methods.container.impl.Inventory;
 import org.dreambot.api.methods.interactive.GameObjects;
 import org.dreambot.api.methods.interactive.Players;
@@ -31,7 +32,10 @@ public class ChopTreeTask extends TaskNode {
    */
   @Override
   public boolean accept() {
-    return !Inventory.isFull() && (GameObjects.closest(currTree.get().getName()) != null);
+    final boolean isInventoryFull = Inventory.isFull();
+    final boolean isTreePresent = GameObjects.closest(currTree.get().getName()) != null;
+
+    return (!isInventoryFull && isTreePresent);
   }
 
   /**
@@ -55,8 +59,6 @@ public class ChopTreeTask extends TaskNode {
 
     // Add additional 1-3 second delay when swapping trees so the bot isn't overly snappy and more
     // human-like.
-    Sleep.sleep(1000, 3000);
-
-    return 1000;
+    return Calculations.random(1000, 3000);
   }
 }
