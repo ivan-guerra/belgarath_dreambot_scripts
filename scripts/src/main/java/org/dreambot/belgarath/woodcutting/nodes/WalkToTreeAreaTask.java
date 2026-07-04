@@ -1,12 +1,12 @@
-package org.dreambot.merlin.woodcutting.nodes;
+package org.dreambot.belgarath.woodcutting.nodes;
 
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.dreambot.api.methods.interactive.Players;
 import org.dreambot.api.script.TaskNode;
 import org.dreambot.api.utilities.Logger;
-import org.dreambot.merlin.common.WalkingUtils;
-import org.dreambot.merlin.woodcutting.Tree;
+import org.dreambot.belgarath.common.WalkingUtils;
+import org.dreambot.belgarath.woodcutting.Tree;
 
 /** Task node for walking to the area of a specific type of tree in the game. */
 public class WalkToTreeAreaTask extends TaskNode {

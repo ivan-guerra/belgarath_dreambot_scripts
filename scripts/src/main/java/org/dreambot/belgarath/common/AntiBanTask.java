@@ -1,4 +1,4 @@
-package org.dreambot.merlin.common;
+package org.dreambot.belgarath.common;
 
 import java.awt.Color;
 import java.awt.Graphics2D;

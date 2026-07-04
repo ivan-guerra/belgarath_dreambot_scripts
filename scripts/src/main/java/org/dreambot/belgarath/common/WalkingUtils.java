@@ -1,4 +1,4 @@
-package org.dreambot.merlin.common;
+package org.dreambot.belgarath.common;
 
 import org.dreambot.api.methods.Calculations;
 import org.dreambot.api.methods.map.Tile;

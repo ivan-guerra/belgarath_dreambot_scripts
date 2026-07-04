@@ -1,22 +1,22 @@
-package org.dreambot.merlin;
+package org.dreambot.belgarath;
 
 import org.dreambot.api.script.AbstractScript;
 import org.dreambot.api.script.TaskNode;
 
 /**
- * Base class for all Merlin sub-scripts. Provides access to the main AbstractScript instance for
+ * Base class for all Belgarath sub-scripts. Provides access to the main AbstractScript instance for
  * lifecycle control.
  */
-public abstract class MerlinScript {
+public abstract class BelgarathScript {
   /** The main AbstractScript instance. */
   protected final AbstractScript script;
 
   /**
-   * Constructs a new MerlinScript with the given AbstractScript instance.
+   * Constructs a new BelgarathScript with the given AbstractScript instance.
    *
    * @param script the main AbstractScript instance
    */
-  public MerlinScript(AbstractScript script) {
+  public BelgarathScript(AbstractScript script) {
     this.script = script;
   }
 

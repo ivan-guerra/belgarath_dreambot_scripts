@@ -4,8 +4,8 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>org.dreambot.merlin</groupId>
-    <artifactId>merlin-dreambot-scripts</artifactId>
+    <groupId>org.dreambot.belgarath</groupId>
+    <artifactId>belgarath-dreambot-scripts</artifactId>
     <version>1.0-SNAPSHOT</version>
   </parent>
 

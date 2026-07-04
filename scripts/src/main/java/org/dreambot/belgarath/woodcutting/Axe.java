@@ -1,4 +1,4 @@
-package org.dreambot.merlin.woodcutting;
+package org.dreambot.belgarath.woodcutting;
 
 /** Enum representing different types of axes available for woodcutting. */
 public enum Axe {

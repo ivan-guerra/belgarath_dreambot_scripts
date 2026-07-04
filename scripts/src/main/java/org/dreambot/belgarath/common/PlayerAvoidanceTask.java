@@ -1,4 +1,4 @@
-package org.dreambot.merlin.common;
+package org.dreambot.belgarath.common;
 
 import java.util.concurrent.atomic.AtomicReference;
 

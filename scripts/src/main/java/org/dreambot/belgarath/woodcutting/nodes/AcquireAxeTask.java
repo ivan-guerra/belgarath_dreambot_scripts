@@ -1,4 +1,4 @@
-package org.dreambot.merlin.woodcutting.nodes;
+package org.dreambot.belgarath.woodcutting.nodes;
 
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -13,9 +13,9 @@ import org.dreambot.api.methods.grandexchange.Status;
 import org.dreambot.api.script.TaskNode;
 import org.dreambot.api.utilities.Logger;
 import org.dreambot.api.utilities.Sleep;
-import org.dreambot.merlin.common.Utility;
-import org.dreambot.merlin.common.WalkingUtils;
-import org.dreambot.merlin.woodcutting.Axe;
+import org.dreambot.belgarath.common.Utility;
+import org.dreambot.belgarath.common.WalkingUtils;
+import org.dreambot.belgarath.woodcutting.Axe;
 
 /**
  * Task node responsible for acquiring the current axe, either from the bank or by purchasing it

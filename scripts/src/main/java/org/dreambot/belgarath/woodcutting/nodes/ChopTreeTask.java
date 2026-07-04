@@ -1,4 +1,4 @@
-package org.dreambot.merlin.woodcutting.nodes;
+package org.dreambot.belgarath.woodcutting.nodes;
 
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -10,7 +10,7 @@ import org.dreambot.api.script.TaskNode;
 import org.dreambot.api.utilities.Logger;
 import org.dreambot.api.utilities.Sleep;
 import org.dreambot.api.wrappers.interactive.GameObject;
-import org.dreambot.merlin.woodcutting.Tree;
+import org.dreambot.belgarath.woodcutting.Tree;
 
 /** Task node for chopping a specific type of tree in the game. */
 public class ChopTreeTask extends TaskNode {

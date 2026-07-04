@@ -1,4 +1,4 @@
-package org.dreambot.merlin.woodcutting;
+package org.dreambot.belgarath.woodcutting;
 
 import java.awt.Graphics2D;
 import java.util.concurrent.atomic.AtomicReference;
@@ -6,20 +6,20 @@ import java.util.concurrent.atomic.AtomicReference;
 import org.dreambot.api.script.AbstractScript;
 import org.dreambot.api.script.TaskNode;
 import org.dreambot.api.script.listener.PaintListener;
-import org.dreambot.merlin.MerlinScript;
-import org.dreambot.merlin.common.AntiBanTask;
-import org.dreambot.merlin.common.BankMiscItemsTask;
-import org.dreambot.merlin.common.PlayerAvoidanceTask;
-import org.dreambot.merlin.woodcutting.nodes.AcquireAxeTask;
-import org.dreambot.merlin.woodcutting.nodes.ChopTreeTask;
-import org.dreambot.merlin.woodcutting.nodes.DropLogsTask;
-import org.dreambot.merlin.woodcutting.nodes.EquipAxeTask;
-import org.dreambot.merlin.woodcutting.nodes.UpgradeAxeTask;
-import org.dreambot.merlin.woodcutting.nodes.UpgradeTreeTask;
-import org.dreambot.merlin.woodcutting.nodes.WalkToTreeAreaTask;
+import org.dreambot.belgarath.BelgarathScript;
+import org.dreambot.belgarath.common.AntiBanTask;
+import org.dreambot.belgarath.common.BankMiscItemsTask;
+import org.dreambot.belgarath.common.PlayerAvoidanceTask;
+import org.dreambot.belgarath.woodcutting.nodes.AcquireAxeTask;
+import org.dreambot.belgarath.woodcutting.nodes.ChopTreeTask;
+import org.dreambot.belgarath.woodcutting.nodes.DropLogsTask;
+import org.dreambot.belgarath.woodcutting.nodes.EquipAxeTask;
+import org.dreambot.belgarath.woodcutting.nodes.UpgradeAxeTask;
+import org.dreambot.belgarath.woodcutting.nodes.UpgradeTreeTask;
+import org.dreambot.belgarath.woodcutting.nodes.WalkToTreeAreaTask;
 
 /** Main script class for the woodcutting bot. */
-public class WoodcuttingScript extends MerlinScript implements PaintListener {
+public class WoodcuttingScript extends BelgarathScript implements PaintListener {
   private final AntiBanTask antiBan;
   private final String nonMiscItemRegex = "axe|logs|clue|nest";
   private AtomicReference<Tree> currTree = new AtomicReference<>(Tree.Normal);

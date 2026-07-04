@@ -1,4 +1,4 @@
-package org.dreambot.merlin;
+package org.dreambot.belgarath;
 
 import java.awt.Graphics2D;
 import java.util.Optional;
@@ -7,21 +7,21 @@ import org.dreambot.api.script.Category;
 import org.dreambot.api.script.ScriptManifest;
 import org.dreambot.api.script.impl.TaskScript;
 import org.dreambot.api.script.listener.PaintListener;
-import org.dreambot.merlin.woodcutting.WoodcuttingScript;
+import org.dreambot.belgarath.woodcutting.WoodcuttingScript;
 
 /**
- * Main entry point for Merlin's DreamBot script collection. Delegates execution to the selected
- * {@link MerlinScript} implementation.
+ * Main entry point for Belgarath's DreamBot script collection. Delegates execution to the selected
+ * {@link BelgarathScript} implementation.
  */
 @ScriptManifest(
-    name = "Merlin's Scripts",
-    author = "Merlin",
-    description = "Merlin's DreamBot script collection.",
+    name = "Belgarath's Scripts",
+    author = "Belgarath",
+    description = "Belgarath's DreamBot script collection.",
     category = Category.MISC,
     version = 0.1)
 public class MainEntryPoint extends TaskScript {
   /** The currently selected script to run. */
-  private MerlinScript selectedScript;
+  private BelgarathScript selectedScript;
 
   /** Constructs a new MainEntryPoint instance. */
   public MainEntryPoint() {}
