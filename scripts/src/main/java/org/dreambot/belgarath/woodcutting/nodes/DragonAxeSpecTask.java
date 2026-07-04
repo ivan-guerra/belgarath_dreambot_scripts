@@ -46,10 +46,13 @@ public class DragonAxeSpecTask extends TaskNode {
    */
   @Override
   public int execute() {
-    if (!Combat.toggleSpecialAttack(true)) {
+    if (Combat.toggleSpecialAttack(true)) {
+      Logger.info("Activated Dragon axe special attack.");
+    } else {
       Logger.error("Failed to activate Dragon axe special attack.");
       return -1;
     }
+
     return 2500;
   }
 }
