@@ -12,6 +12,7 @@ import org.dreambot.belgarath.common.BankMiscItemsTask;
 import org.dreambot.belgarath.common.PlayerAvoidanceTask;
 import org.dreambot.belgarath.woodcutting.nodes.AcquireAxeTask;
 import org.dreambot.belgarath.woodcutting.nodes.ChopTreeTask;
+import org.dreambot.belgarath.woodcutting.nodes.DragonAxeSpecTask;
 import org.dreambot.belgarath.woodcutting.nodes.DropLogsTask;
 import org.dreambot.belgarath.woodcutting.nodes.EquipAxeTask;
 import org.dreambot.belgarath.woodcutting.nodes.UpgradeAxeTask;
@@ -52,6 +53,7 @@ public class WoodcuttingScript extends BelgarathScript implements PaintListener 
       new WalkToTreeAreaTask(currTree),
       new DropLogsTask(),
       new PlayerAvoidanceTask<Tree>(currTree),
+      new DragonAxeSpecTask(currAxe),
       new ChopTreeTask(currTree)
     };
   }
