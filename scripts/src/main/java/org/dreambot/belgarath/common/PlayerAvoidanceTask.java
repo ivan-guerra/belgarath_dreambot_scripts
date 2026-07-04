@@ -31,8 +31,9 @@ public class PlayerAvoidanceTask<T> extends TaskNode {
    */
   @Override
   public boolean accept() {
-    GameObject obj = GameObjects.closest(resource.get().toString());
-    return obj != null && Utility.isSomeoneElseUsingNode(obj);
+    final GameObject obj = GameObjects.closest(resource.get().toString());
+
+    return (obj != null && Utility.isSomeoneElseUsingNode(obj));
   }
 
   /**
