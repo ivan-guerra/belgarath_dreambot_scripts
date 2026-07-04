@@ -22,7 +22,7 @@ import org.dreambot.belgarath.woodcutting.nodes.WalkToTreeAreaTask;
 /** Main script class for the woodcutting bot. */
 public class WoodcuttingScript extends BelgarathScript implements PaintListener {
   private final AntiBanTask antiBan;
-  private final String nonMiscItemRegex = "axe|logs|clue|nest";
+  private final String nonMiscItemRegex = "axe|logs|scroll";
   private AtomicReference<Tree> currTree = new AtomicReference<>(Tree.Normal);
   private AtomicReference<Axe> currAxe = new AtomicReference<>(Axe.BRONZE);
 
