@@ -3,6 +3,7 @@ package org.dreambot.belgarath.common;
 import java.util.regex.Pattern;
 
 import org.dreambot.api.Client;
+import org.dreambot.api.ClientSettings;
 import org.dreambot.api.data.GameState;
 import org.dreambot.api.input.Keyboard;
 import org.dreambot.api.methods.container.impl.Inventory;
@@ -30,6 +31,7 @@ public class Utility {
   private static final long WITHDRAW_TIMEOUT_MS = 5000;
   private static final long DEPOSIT_TIMEOUT_MS = 5000;
   private static final long BANK_CLOSE_TIMEOUT_MS = 2000;
+  private static final long ENABLE_SHIFT_CLICK_DROPPING_TIMEOUT_MS = 10000;
 
   /** Private constructor to prevent instantiation of the Utility class. */
   private Utility() {
@@ -44,10 +46,24 @@ public class Utility {
    * @return true if the items were successfully dropped, false otherwise.
    */
   public static boolean dropVerticalOrdering(String regex) {
-    int[] ordered_slots = {
+    final int[] ordered_slots = {
       0, 4, 8, 12, 16, 20, 24, 1, 5, 9, 13, 17, 21, 25, 2, 6, 10, 14, 18, 22, 26, 3, 7, 11, 15, 19,
       23, 27
     };
+
+    if (!ClientSettings.isShiftClickDroppingEnabled()) {
+      Logger.info("Shift-click dropping is not enabled. Attempting to enable it.");
+      final boolean isShiftClickDropEnabled =
+          ClientSettings.toggleShiftClickDropping(true)
+              && Sleep.sleepUntil(
+                  ClientSettings::isShiftClickDroppingEnabled,
+                  ENABLE_SHIFT_CLICK_DROPPING_TIMEOUT_MS);
+      if (!isShiftClickDropEnabled) {
+        Logger.error("Failed to enable shift-click dropping.");
+        return false;
+      }
+      Logger.info("Shift-click dropping enabled successfully.");
+    }
 
     if (!Utility.openInventoryTab()) {
       Logger.error("Failed to open inventory tab.");
