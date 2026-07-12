@@ -6,6 +6,7 @@ import org.dreambot.api.methods.combat.Combat;
 import org.dreambot.api.script.TaskNode;
 import org.dreambot.api.utilities.Logger;
 import org.dreambot.merlin.common.Utility;
+import org.dreambot.merlin.common.WaitTimer;
 import org.dreambot.merlin.woodcutting.Axe;
 
 /**
@@ -14,6 +15,7 @@ import org.dreambot.merlin.woodcutting.Axe;
  */
 public class DragonAxeSpecTask extends TaskNode {
   private final AtomicReference<Axe> currAxe;
+  private final WaitTimer waitTimer = new WaitTimer(1500, 3000);
 
   /**
    * Constructs a new DragonAxeSpecTask with the given AtomicReference to the current axe.
@@ -42,17 +44,18 @@ public class DragonAxeSpecTask extends TaskNode {
   /**
    * Executes the task of activating the Dragon axe special attack.
    *
-   * @return 2500 if the special attack was successfully activated, -1 if it failed
+   * @return a human-like randomised delay in milliseconds before the next task execution, or -1 if
+   *     an error occurred during the process
    */
   @Override
   public int execute() {
-    if (Combat.toggleSpecialAttack(true)) {
-      Logger.info("Activated Dragon axe special attack.");
-    } else {
+    if (!Combat.toggleSpecialAttack(true)) {
       Logger.error("Failed to activate Dragon axe special attack.");
       return -1;
     }
 
-    return 2500;
+    Logger.info("Activated Dragon axe special attack.");
+
+    return waitTimer.next();
   }
 }

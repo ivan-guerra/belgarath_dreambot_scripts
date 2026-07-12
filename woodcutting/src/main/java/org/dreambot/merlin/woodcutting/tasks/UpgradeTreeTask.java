@@ -9,6 +9,7 @@ import org.dreambot.api.methods.world.Worlds;
 import org.dreambot.api.script.TaskNode;
 import org.dreambot.api.utilities.Logger;
 import org.dreambot.merlin.common.Utility;
+import org.dreambot.merlin.common.WaitTimer;
 import org.dreambot.merlin.woodcutting.Tree;
 
 /**
@@ -17,6 +18,7 @@ import org.dreambot.merlin.woodcutting.Tree;
  */
 public class UpgradeTreeTask extends TaskNode {
   private final AtomicReference<Tree> tree;
+  private final WaitTimer waitTimer = new WaitTimer(3000, 5000);
 
   /**
    * Constructs a new UpgradeTreeTask for the specified tree type.
@@ -42,7 +44,8 @@ public class UpgradeTreeTask extends TaskNode {
    * Upgrades the tree type to the best available tree based on the player's woodcutting level and
    * membership status, hopping worlds if necessary.
    *
-   * @return 1000 if the upgrade was successful, -1 if it failed
+   * @return a human-like randomised delay in milliseconds before the next task execution, or -1 if
+   *     an error occurred during the process
    */
   @Override
   public int execute() {
@@ -58,7 +61,7 @@ public class UpgradeTreeTask extends TaskNode {
         return -1;
       }
     }
-    return 1000;
+    return waitTimer.next();
   }
 
   /**

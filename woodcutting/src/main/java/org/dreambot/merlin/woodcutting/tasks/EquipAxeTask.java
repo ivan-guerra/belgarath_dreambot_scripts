@@ -7,6 +7,7 @@ import org.dreambot.api.methods.skills.Skills;
 import org.dreambot.api.script.TaskNode;
 import org.dreambot.api.utilities.Logger;
 import org.dreambot.merlin.common.Utility;
+import org.dreambot.merlin.common.WaitTimer;
 import org.dreambot.merlin.woodcutting.Axe;
 
 /**
@@ -15,6 +16,7 @@ import org.dreambot.merlin.woodcutting.Axe;
  */
 public class EquipAxeTask extends TaskNode {
   private final AtomicReference<Axe> currAxe;
+  private final WaitTimer waitTimer = new WaitTimer(1000, 2000);
 
   /**
    * Constructs a new EquipAxeTask with the given AtomicReference to the current axe.
@@ -45,7 +47,8 @@ public class EquipAxeTask extends TaskNode {
   /**
    * Executes the task of equipping the current axe.
    *
-   * @return 1000 if the axe was successfully equipped, -1 if it failed
+   * @return a human-like randomised delay in milliseconds before the next task execution, or -1 if
+   *     an error occurred during the process
    */
   @Override
   public int execute() {
@@ -53,6 +56,6 @@ public class EquipAxeTask extends TaskNode {
       Logger.error("Failed to equip " + currAxe.get().getName() + ".");
       return -1;
     }
-    return 1000;
+    return waitTimer.next();
   }
 }

@@ -2,7 +2,6 @@ package org.dreambot.merlin.woodcutting.tasks;
 
 import java.util.concurrent.atomic.AtomicReference;
 
-import org.dreambot.api.methods.Calculations;
 import org.dreambot.api.methods.container.impl.Inventory;
 import org.dreambot.api.methods.interactive.GameObjects;
 import org.dreambot.api.methods.interactive.Players;
@@ -10,11 +9,13 @@ import org.dreambot.api.script.TaskNode;
 import org.dreambot.api.utilities.Logger;
 import org.dreambot.api.utilities.Sleep;
 import org.dreambot.api.wrappers.interactive.GameObject;
+import org.dreambot.merlin.common.WaitTimer;
 import org.dreambot.merlin.woodcutting.Tree;
 
 /** Task node for chopping a specific type of tree in the game. */
 public class ChopTreeTask extends TaskNode {
   private final AtomicReference<Tree> currTree;
+  private final WaitTimer waitTimer = new WaitTimer(1500, 6000);
 
   /**
    * Constructs a new ChopTreeTask for the specified tree type.
@@ -41,7 +42,7 @@ public class ChopTreeTask extends TaskNode {
   /**
    * Executes the chopping action on the specified tree.
    *
-   * @return 1000 if the action was successful, -1 if it failed
+   * @return a human-like randomised delay in milliseconds before the next task execution
    */
   @Override
   public int execute() {
@@ -57,8 +58,6 @@ public class ChopTreeTask extends TaskNode {
         chopTimeoutMs,
         pollDelayMs);
 
-    // Add additional 1-3 second delay when swapping trees so the bot isn't overly snappy and more
-    // human-like.
-    return Calculations.random(1000, 3000);
+    return waitTimer.next();
   }
 }

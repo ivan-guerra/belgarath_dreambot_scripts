@@ -14,6 +14,7 @@ import org.dreambot.api.script.TaskNode;
 import org.dreambot.api.utilities.Logger;
 import org.dreambot.api.utilities.Sleep;
 import org.dreambot.merlin.common.Utility;
+import org.dreambot.merlin.common.WaitTimer;
 import org.dreambot.merlin.common.WalkingUtils;
 import org.dreambot.merlin.woodcutting.Axe;
 
@@ -24,6 +25,7 @@ import org.dreambot.merlin.woodcutting.Axe;
 public class AcquireAxeTask extends TaskNode {
   private final AtomicReference<Axe> currAxe;
   private boolean buyingFromGE = false;
+  private final WaitTimer waitTimer = new WaitTimer(5000, 6000);
 
   /**
    * Constructs a new AcquireAxeTask with the given AtomicReference to the current axe.
@@ -54,7 +56,8 @@ public class AcquireAxeTask extends TaskNode {
    * mainhand weapon, then checks if the axe is in the bank. If it is, it withdraws it; if not, it
    * attempts to buy it from the Grand Exchange.
    *
-   * @return 3000 if the operation was successful, -1 if there was an error
+   * @return a human-like randomised delay in milliseconds before the next task execution, or -1 if
+   *     an error occurred during the process
    */
   @Override
   public int execute() {
@@ -91,7 +94,7 @@ public class AcquireAxeTask extends TaskNode {
       }
     }
 
-    return 3000;
+    return waitTimer.next();
   }
 
   /**
@@ -113,7 +116,8 @@ public class AcquireAxeTask extends TaskNode {
    * Exchange, it will be collected. If there are open slots, it will attempt to place a buy offer.
    *
    * @param axeName the name of the axe to buy
-   * @return 3000 if the operation was successful, -1 if there was an error
+   * @return a human-like randomised delay in milliseconds before the next task execution, or -1 if
+   *     an error occurred during the process
    */
   private int buyFromGrandExchange(String axeName) {
     if (GrandExchange.open()) {
@@ -148,7 +152,7 @@ public class AcquireAxeTask extends TaskNode {
     } else {
       WalkingUtils.walkToTile(BankLocation.GRAND_EXCHANGE.getTile());
     }
-    return 3000;
+    return waitTimer.next();
   }
 
   /**

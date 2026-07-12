@@ -14,6 +14,7 @@ import org.dreambot.api.wrappers.interactive.GameObject;
  */
 public class PlayerAvoidanceTask<T> extends TaskNode {
   private AtomicReference<T> resource;
+  private final WaitTimer waitTimer = new WaitTimer(1000, 2000);
 
   /**
    * Constructs a new PlayerAvoidanceTask with the given AtomicReference to the resource to avoid.
@@ -39,7 +40,8 @@ public class PlayerAvoidanceTask<T> extends TaskNode {
   /**
    * Hops to a different world if another player is using the specified resource.
    *
-   * @return 1000 if the task was successful, -1 if it failed
+   * @return a human-like randomised delay in milliseconds before the next task execution, or -1 if
+   *     an error occurred during the process
    */
   @Override
   public int execute() {
@@ -48,6 +50,6 @@ public class PlayerAvoidanceTask<T> extends TaskNode {
       Logger.error("Failed to hop worlds.");
       return -1;
     }
-    return 1000;
+    return waitTimer.next();
   }
 }

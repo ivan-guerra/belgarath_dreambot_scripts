@@ -14,6 +14,7 @@ import org.dreambot.api.utilities.Sleep;
  */
 public class BankMiscItemsTask extends TaskNode {
   private final String expectedItemRegex;
+  private final WaitTimer waitTimer = new WaitTimer(1000, 2000);
 
   /**
    * Constructs a new BankMiscItemsTask with the specified regex pattern for expected items.
@@ -42,7 +43,8 @@ public class BankMiscItemsTask extends TaskNode {
    * Executes the task of depositing all items in the bank except those that match the expected item
    * regex.
    *
-   * @return 1000 if the operation was successful, -1 if there was an error
+   * @return a human-like randomised delay in milliseconds before the next task execution, or -1 if
+   *     an error occurred during the process
    */
   @Override
   public int execute() {
@@ -61,6 +63,6 @@ public class BankMiscItemsTask extends TaskNode {
         return -1;
       }
     }
-    return 1000;
+    return waitTimer.next();
   }
 }

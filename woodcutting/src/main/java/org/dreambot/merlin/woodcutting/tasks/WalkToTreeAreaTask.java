@@ -5,6 +5,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import org.dreambot.api.methods.interactive.Players;
 import org.dreambot.api.script.TaskNode;
 import org.dreambot.api.utilities.Logger;
+import org.dreambot.merlin.common.WaitTimer;
 import org.dreambot.merlin.common.WalkingUtils;
 import org.dreambot.merlin.woodcutting.Tree;
 
@@ -12,6 +13,7 @@ import org.dreambot.merlin.woodcutting.Tree;
 public class WalkToTreeAreaTask extends TaskNode {
   private static final int MAX_TREE_DIST = 7;
   private final AtomicReference<Tree> currTree;
+  private final WaitTimer waitTimer = new WaitTimer(1000, 2000);
 
   /**
    * Constructs a new WalkToTreeAreaTask for the specified tree type.
@@ -38,7 +40,7 @@ public class WalkToTreeAreaTask extends TaskNode {
   /**
    * Walks to the area of the specified tree type.
    *
-   * @return delay in milliseconds before next execution
+   * @return a human-like randomised delay in milliseconds before the next task execution
    */
   @Override
   public int execute() {
@@ -46,6 +48,6 @@ public class WalkToTreeAreaTask extends TaskNode {
 
     WalkingUtils.walkToTile(currTree.get().getLocation());
 
-    return 2000;
+    return waitTimer.next();
   }
 }
