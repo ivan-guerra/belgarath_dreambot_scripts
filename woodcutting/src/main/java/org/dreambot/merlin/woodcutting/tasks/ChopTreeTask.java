@@ -1,4 +1,4 @@
-package org.dreambot.merlin.woodcutting.nodes;
+package org.dreambot.merlin.woodcutting.tasks;
 
 import java.util.concurrent.atomic.AtomicReference;
 

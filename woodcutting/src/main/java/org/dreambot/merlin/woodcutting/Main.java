@@ -9,18 +9,18 @@ import org.dreambot.api.script.impl.TaskScript;
 import org.dreambot.merlin.common.AntiBanTask;
 import org.dreambot.merlin.common.BankMiscItemsTask;
 import org.dreambot.merlin.common.PlayerAvoidanceTask;
-import org.dreambot.merlin.woodcutting.nodes.AcquireAxeTask;
-import org.dreambot.merlin.woodcutting.nodes.ChopTreeTask;
-import org.dreambot.merlin.woodcutting.nodes.DragonAxeSpecTask;
-import org.dreambot.merlin.woodcutting.nodes.DropLogsTask;
-import org.dreambot.merlin.woodcutting.nodes.EquipAxeTask;
-import org.dreambot.merlin.woodcutting.nodes.UpgradeAxeTask;
-import org.dreambot.merlin.woodcutting.nodes.UpgradeTreeTask;
-import org.dreambot.merlin.woodcutting.nodes.WalkToTreeAreaTask;
+import org.dreambot.merlin.woodcutting.tasks.AcquireAxeTask;
+import org.dreambot.merlin.woodcutting.tasks.ChopTreeTask;
+import org.dreambot.merlin.woodcutting.tasks.DragonAxeSpecTask;
+import org.dreambot.merlin.woodcutting.tasks.DropLogsTask;
+import org.dreambot.merlin.woodcutting.tasks.EquipAxeTask;
+import org.dreambot.merlin.woodcutting.tasks.UpgradeAxeTask;
+import org.dreambot.merlin.woodcutting.tasks.UpgradeTreeTask;
+import org.dreambot.merlin.woodcutting.tasks.WalkToTreeAreaTask;
 
 /**
- * The Main class is the entry point for the Merlin's Woodcutting script. It extends TaskScript
- * and manages the execution of various woodcutting tasks.
+ * The Main class is the entry point for the Merlin's Woodcutting script. It extends TaskScript and
+ * manages the execution of various woodcutting tasks.
  */
 @ScriptManifest(
     name = "Merlin's Woodcutting",

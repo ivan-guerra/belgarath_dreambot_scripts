@@ -1,4 +1,4 @@
-package org.dreambot.merlin.woodcutting.nodes;
+package org.dreambot.merlin.woodcutting.tasks;
 
 import org.dreambot.api.methods.container.impl.Inventory;
 import org.dreambot.api.script.TaskNode;
