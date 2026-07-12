@@ -5,15 +5,23 @@
 
   <parent>
     <groupId>org.dreambot.belgarath</groupId>
-    <artifactId>belgarath-dreambot-scripts</artifactId>
+    <artifactId>dreambot-scripts</artifactId>
     <version>1.0-SNAPSHOT</version>
   </parent>
 
-  <artifactId>scripts</artifactId>
+  <artifactId>woodcutting</artifactId>
 
   <properties>
     <dreambot.path>${user.home}/DreamBot/</dreambot.path>
   </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.dreambot.belgarath</groupId>
+      <artifactId>common</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+  </dependencies>
 
   <build>
     <plugins>
