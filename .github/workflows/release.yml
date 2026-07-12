@@ -24,8 +24,14 @@ jobs:
       - name: Build with Maven
         run: mvn install
 
+      - name: Rename JAR artifacts
+        run: |
+          for f in woodcutting/target/woodcutting-*-dep-included.jar; do
+            mv "$f" "${f/-dep-included/}"
+          done
+
       - name: Upload JAR artifacts to release
         uses: softprops/action-gh-release@v2
         with:
           files: |
-            woodcutting/target/woodcutting-*-dep-included.jar
+            woodcutting/target/woodcutting-*.jar
