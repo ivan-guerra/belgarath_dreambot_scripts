@@ -15,7 +15,7 @@ import org.dreambot.merlin.woodcutting.Tree;
 /** Task node for chopping a specific type of tree in the game. */
 public class ChopTreeTask extends TaskNode {
   private final AtomicReference<Tree> currTree;
-  private final WaitTimer waitTimer = new WaitTimer(1500, 6000);
+  private final WaitTimer waitTimer = new WaitTimer(2500, 6000);
 
   /**
    * Constructs a new ChopTreeTask for the specified tree type.
