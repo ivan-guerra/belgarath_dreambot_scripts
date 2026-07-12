@@ -1,4 +1,4 @@
-package org.dreambot.belgarath.woodcutting;
+package org.dreambot.merlin.woodcutting;
 
 import org.dreambot.api.methods.map.Tile;
 

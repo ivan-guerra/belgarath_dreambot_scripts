@@ -1,4 +1,4 @@
-package org.dreambot.belgarath.woodcutting;
+package org.dreambot.merlin.woodcutting;
 
 import java.awt.Graphics2D;
 import java.util.concurrent.atomic.AtomicReference;
@@ -6,26 +6,26 @@ import java.util.concurrent.atomic.AtomicReference;
 import org.dreambot.api.script.Category;
 import org.dreambot.api.script.ScriptManifest;
 import org.dreambot.api.script.impl.TaskScript;
-import org.dreambot.belgarath.common.AntiBanTask;
-import org.dreambot.belgarath.common.BankMiscItemsTask;
-import org.dreambot.belgarath.common.PlayerAvoidanceTask;
-import org.dreambot.belgarath.woodcutting.nodes.AcquireAxeTask;
-import org.dreambot.belgarath.woodcutting.nodes.ChopTreeTask;
-import org.dreambot.belgarath.woodcutting.nodes.DragonAxeSpecTask;
-import org.dreambot.belgarath.woodcutting.nodes.DropLogsTask;
-import org.dreambot.belgarath.woodcutting.nodes.EquipAxeTask;
-import org.dreambot.belgarath.woodcutting.nodes.UpgradeAxeTask;
-import org.dreambot.belgarath.woodcutting.nodes.UpgradeTreeTask;
-import org.dreambot.belgarath.woodcutting.nodes.WalkToTreeAreaTask;
+import org.dreambot.merlin.common.AntiBanTask;
+import org.dreambot.merlin.common.BankMiscItemsTask;
+import org.dreambot.merlin.common.PlayerAvoidanceTask;
+import org.dreambot.merlin.woodcutting.nodes.AcquireAxeTask;
+import org.dreambot.merlin.woodcutting.nodes.ChopTreeTask;
+import org.dreambot.merlin.woodcutting.nodes.DragonAxeSpecTask;
+import org.dreambot.merlin.woodcutting.nodes.DropLogsTask;
+import org.dreambot.merlin.woodcutting.nodes.EquipAxeTask;
+import org.dreambot.merlin.woodcutting.nodes.UpgradeAxeTask;
+import org.dreambot.merlin.woodcutting.nodes.UpgradeTreeTask;
+import org.dreambot.merlin.woodcutting.nodes.WalkToTreeAreaTask;
 
 /**
- * The Main class is the entry point for the Belgarath's Woodcutting script. It extends TaskScript
+ * The Main class is the entry point for the Merlin's Woodcutting script. It extends TaskScript
  * and manages the execution of various woodcutting tasks.
  */
 @ScriptManifest(
-    name = "Belgarath's Woodcutting",
-    author = "Belgarath",
-    description = "Belgarath's power chopping script.",
+    name = "Merlin's Woodcutting",
+    author = "Merlin",
+    description = "Merlin's power chopping script.",
     category = Category.WOODCUTTING,
     version = 0.1)
 public class Main extends TaskScript {
