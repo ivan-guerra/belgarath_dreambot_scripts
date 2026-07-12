@@ -27,11 +27,11 @@ The command will compile all script modules and install their JAR files to
 
 ## Releases
 
-In the near future, there will be pre-built releases of each script's JAR file
-for download here on GitHub. For now, you can build the project following the
-steps in [Installation](#installation).
+You can downloaded the latest release of each script from the [releases
+page][5].
 
 [1]: https://dreambot.org
 [2]: https://adoptium.net/temurin/releases?version=11
 [3]: https://downloads.dreambot.org/launcher/Launcher.jar
 [4]: https://maven.apache.org/download.cgi
+[5]: https://github.com/ivan-guerra/merlin_dreambot_scripts/releases
